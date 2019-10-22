@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>마크업 연습</title>
+        <style>
+        body{
+            height: 10000px;
+        }
+        </style>
+    </head>
+    <body>
+
+        <h1> 프로그래밍 교육</h1>
+        <!-- href 에 # 을 붙이면 해당하는 id값의 위치로 이동한다 -->
+        <a href ="#python">
+           
+            <img src = "images/python.png" alt="python" width = "50px" height="50px">
+        </a>
+        <a href ="#web">
+          
+            <img src ="images/html.png" alt = "web" width ="50px" height="50px">
+        </a>
+        <a href ="01_index.html">참고사이트</a>
+        <!-- 명시적 표현 : ""./01_index.html" :현재폴더에 있는 index.html파일 -->
+        <hr>
+
+        <!-- 
+            a태그 
+            현재창에서 이동 (default) : _self
+            새 창에서 이동  : target:_blank
+         -->
+        <a href="https://docs.python.org/ko/3/tutorial/index.html" target="_blank">
+
+            <h2  id = "python"> 파이썬</h2>
+        </a>
+        <h3>Number Type</h3>
+        <p> 파이썬에서 숫자형은 아래와 같이 있다</p>
+        <ol>
+            <li>int</li>
+            <li>float</li>
+            <li>complex</li>
+            <li><del>str</del></li>
+
+        </ol>
+
+        <hr>
+    <h3> Sequence</h3>
+<p>파이 썬에서 시퀀스는 아래와 같이 있다</p>
+<p><strong>시퀀스는  for문을 돌릴 수있다</strong></p>
+<ol>
+<li style ="list-style-type: circle;">str</li>
+<li>list</li>
+<li>tuple</li>
+<li>range</li>
+</ol>
+<hr>
+<!-- target 설정 안하면 현재창에서 이동! -->
+<a href="https://www.naver.com/">
+
+    <h3 id = "web">웹</h3>
+</a>
+
+<h4>기초</h4>
+<ul>
+<li style = "list-style-type: upper-alpha;">HTML</li>
+<li style = "list-style-type: ;">CSS</li>
+
+
+<!-- 유투브 영상 삽입! 동영상 오른쪽클릭 -> -->
+<iframe width="500" heignt="250" src="https://www.youtube.com/watch?v=JlgsRMYuuog"></a>
+</ul>
+
+    </body>
+
+</html>
