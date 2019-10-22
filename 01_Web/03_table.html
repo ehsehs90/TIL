@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        
+        <style>
+        td{
+            border: 1px solid darkgray;
+        }
+        </style>
     </head>
     <dody>
         <table border="1px solid black">
@@ -29,13 +33,27 @@
         </table>
         <br>
         <br>
-        <table border= "1px solid black" >
+        <!-- table + semantic -->
+        <!--  
+                summary : 스크린 리더로 접근하는 분들에게 테이블을 어떻게 접근해야 하는지 안내 
+                but, HTML5 에서는 summary 속성 대신 caption 요소의 내용을 더 이해사기 쉽도록 작성 권장-->
+        
+            <table summary= "락 페스티벌 시간표이며 내부 소극장 외부 잔디 마당과 대공연장 총 3곳에서 10시간동안 진행" >
+            <!-- caption: 표의 제목! 무조건 table의 첫번째 자식으로 와야 한다 -->
+            <caption>
+                <h1>2019 타임테이블</h1>
+            </caption>
+            <thead>
+                <!-- thead : 1번만 선언 가능.  -->
+            </thead>
+            <tbody>
             <tr>
                 <th>time</th>
                 <th>indoor</th>
                 <th colspan="2">outdoor</th>
                 <!-- <th></th> -->
             </tr>
+       
             <tr>
                 <td>10:00</td>
                 <td rowspan="2">안녕하신가요</td>
@@ -63,7 +81,10 @@
             <tr>
 
             </tr>
-
+            </tbody>
+            <tfoot>
+                <!-- tfoot : 테이블 하단 요약부분을 그룹화! 한 번만 선언 -->
+            </tfoot>
         </table>
     </dody>
     </html>
