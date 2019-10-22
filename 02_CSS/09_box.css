@@ -11,7 +11,8 @@
     height: 100px;
     position: absolute;
   }
-  
+  /*  부모가 relative 고 자식이 absolute면 부모속성 기준으로 움직임 */
+  /* 부모가 relative 고 자식이 relative면 걍 자기기준..? */
   #red {
     top: 400px;
     left : 400px;
@@ -61,4 +62,4 @@
     top: -100px;
     left: 100px;
   }
-  }
+  
