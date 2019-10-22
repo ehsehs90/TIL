@@ -1,0 +1,36 @@
+/* 전체 선택자 */
+*{
+    color: mediumpurple;
+}
+/* 태그 선택자 */
+h1{
+
+    color : mediumorchid;
+}
+
+/* 클래스 선택자 */
+.pink{
+    color : pink;
+}
+
+/* 아이디 선택자 */
+#yellow{
+    color : yellow;
+}
+
+/* 아이디> 클래스 */
+#b{
+    color : mediumturquoise
+}
+.a{
+    color :mistyrose
+}
+
+/* 클래스> 태그 */
+.c{
+    color :teal;
+}
+
+.m{
+    color :black;
+}
