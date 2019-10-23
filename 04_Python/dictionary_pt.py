@@ -32,6 +32,8 @@ scores = {
 # 아래에 코드를 작성해 주세요.
 print('==== Q2 ====')
 
+
+
 total_score = 0
 length = 0
 
@@ -63,6 +65,8 @@ print('==== Q3-1 ====')
 광주 : 평균온도
 부산 : 평균온도
 '''
+
+
 for name, temp in cities.items():
     average_temp = sum(temp)/ len(temp)
     print(f"{name}:{average_temp}")

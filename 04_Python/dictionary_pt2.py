@@ -1,3 +1,5 @@
+
+
 t4ir = {
     "location": ["역삼", "강남", "삼성", "왕십리"],
     "language": {
@@ -38,7 +40,12 @@ t4ir = {
 출력예시)
 4
 """
-print(len(t4ir["location"])
+# print(len(t4ir['location']))
+
+
+
+
+
 
 """
 난이도** 2. python standard library에 'requests'가 있나요? : 접근 및 list in
@@ -46,39 +53,39 @@ print(len(t4ir["location"])
 False
 """
 
-
-if requests in t4ir.get["language"].get["python"].get["python standard library"]:
-    print(True)
+if 'requests' in t4ir['language']['python']['python standard library']:
+    print("True")
 else:
-    print(False)
+    print("false")
 
+print ('request' in t4ir['language']['python']['python standard library']) 
 
 """
 난이도** 3. connected반의 반장의 이름을 출력하세요. : depth 있는 접근
 출력예시)
 정세환
 """
-print(t4ir["classes"]["connected"]["class president"])
+print(t4ir['classes']['connected']['class president'])
+# print(t4ir['classes']['connected'].values())
 
 """
 난이도*** 4. t4ir에서 배우는 언어들을 출력하세요. : dictionary.keys() 반복
 출력 예시)
 python
 web
-"""
-for language in t4ir["language"].keys:
+# """
+for language in t4ir['language'].keys():
     print(language)
-
 
 """
 난이도*** 5 t4ir bigdata반의 강사와 매니저의 이름을 출력하세요. dictionary.values() 반복
 출력 예시)
 이민교
 매니저
-"""
+# """
 
-for value in t4ir['classes']['bigdata'].values():
-    print(value)
+for name in t4ir['classes']['bigdata'].values():
+    print(name)
 
 
 """
@@ -86,15 +93,17 @@ for value in t4ir['classes']['bigdata'].values():
 출력 예시)
 flask는 micro이다.
 django는 full-functioning이다.
-"""
+# """
 
-for key, value in t4ir['language']['python']['frameworks'].items():
-    print(f'{key}는{value}이다.')
+for name, temp in t4ir['language']['python']['frameworks'].items():
+    print(f'{name}은 {temp}이다')
 
-"""
-난이도***** 7. 오늘 당번을 뽑기 위해 groups의 E 그룹에서 한명을 랜덤으로 뽑아주세요. : depth 있는 접근 + list 가지고 와서 random.
-출력예시)
-오늘의 당번은 황민승
-"""
+# """
+# 난이도***** 7. 오늘 당번을 뽑기 위해 groups의 E 그룹에서 한명을 랜덤으로 뽑아주세요. : depth 있는 접근 + list 가지고 와서 random.
+# 출력예시)
+# 오늘의 당번은 황민승
+# """
+import random
 
-print(random.choice(t4ir['classes']['connected']['groups']['E']))
+a= random.choice(t4ir['classes']['connected']['groups']['E'])
+print(a)
