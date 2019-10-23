@@ -27,6 +27,7 @@ div{
     border-radius:15px;
 }
 .margin-shorthand-1{
+    /* 상 하 좌 우 */
     margin:15px;
 }
 
