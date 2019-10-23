@@ -98,6 +98,43 @@ for key in lunch.keys():
 
 ### 2. 실습 문제
 
+```python
+t4ir = {
+    "location": ["역삼", "강남", "삼성", "왕십리"],
+    "language": {
+        "python": {
+            "python standard library": ["os", "random", "webbrowser"],
+            "frameworks": {
+                "flask": "micro",
+                "django": "full-functioning"
+            },
+            "data_science": ["numpy", "pandas", "scipy", "sklearn"],
+            "scraping": ["requests", "bs4"],
+        },
+        "web" : ["HTML", "CSS"]
+    },
+    "classes": {
+        "connected":  {
+            "lecturer": "유창오",
+            "manager": "유주희",
+            "class president": "정세환",
+            "groups": {
+                "A": ["정세환", "오은애", "황민승", "소현우", "김한석"],
+                "B": ["최재범", "서혁진", "감자", "이도현", "합기도"],
+                "C": ["이수연", "남찬우", "이승희", "은승찬", "김건"],
+                "D": ["박경희", "김영선", "이동열", "이건희", "최찬종"],
+                "E": ["공선아", "최주현"]
+            }
+        },
+        "bigdata": {
+            "lecturer": "이민교",
+            "manager": "매니저"
+        }
+    }
+}
+
+```
+
 
 
 이정도 하면 딕셔너리에서 데이터 뽑아오기 문제 없음 딕셔너리마스터!
