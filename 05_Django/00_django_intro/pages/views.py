@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from datetime import datetime
 import random
 
 # Create your views here.
@@ -66,6 +67,8 @@ def hello(request, name):
 def times(request,num1,num2):
     a = num1 * num2
     context ={
+        'num1' : num1,
+        'num2' : num2,
         'a' : a
     }
     return render(request, 'times.html',context)
@@ -79,3 +82,31 @@ def area(request,num):
          'b': b
     }
     return render(request, 'area.html',context)
+
+def template_language(request):
+    menus = ['짜장면', '탕수육', '짬뽕', '양장피']
+    my_sentence = 'Life is short, you need python'
+    messages = ['apple', 'banana', 'cucumber', 'mango']
+    datetimenow = datetime.now()
+    empty_list = []
+    context = {
+        'menus': menus,
+        'my_sentence': my_sentence,
+        'messages': messages,
+        'empty_list': empty_list,
+        'datetimenow': datetimenow,
+    }
+    return render(request, 'template_language.html', context)
+
+
+# [실습1] ISIT YOUR BIRTH?
+# [실습2] 회문 판별
+# def isbirth(request):
+
+# ex) 오디오는 거꾸로 해도 오디오 ->회문!
+# def inpal(request):
+
+
+
+# [실습3] 로또 번호 추첨
+# 임의로 출력한 로또 번호와 가장 최근에 추첨한 로또 번호 비교해서 당첨 여부 확인

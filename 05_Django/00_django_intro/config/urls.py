@@ -18,6 +18,7 @@ from django.urls import path
 from pages import views
 
 urlpatterns = [
+    path('template_language/',views.template_language),
     path('times/<int:num1>/<int:num2>',views.times),
     path('area/<int:num>',views.area),
     path('hello/<str:name>/', views.hello),
