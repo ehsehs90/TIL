@@ -99,14 +99,50 @@ def template_language(request):
     return render(request, 'template_language.html', context)
 
 
-# [실습1] ISIT YOUR BIRTH?
+# [실습1] ISIT YOUR BIRTH? (날짜 라이브러리 활용)
+# 오늘 날짜와 본인 실제 생일 비교해서, 맞으면 예! 아니면 아니오!
+def isbirth(request):
+    
+    days = datetime.now()
+    if days.month == 12 and days.day ==2:
+        result = True
+    else:
+        result = False
+    
+    context = {
+        'result' : result    
+    }
+    return render(request, 'isbirth.html', context)
+
 # [실습2] 회문 판별
-# def isbirth(request):
-
 # ex) 오디오는 거꾸로 해도 오디오 ->회문!
-# def inpal(request):
+def ispal(request,word):  
+        #검색 키워드 ㅣ 파이썬 문자열 슬라이스
+        if word == word[::-1]:
+            result = True
+        else:
+            result = False
+        context = {
+            'result' : result,
+            'word' : word,
+        }
+        return render(request, 'ispal.html', context)
 
-
+# return render(request, 'inpal.html', context)
 
 # [실습3] 로또 번호 추첨
 # 임의로 출력한 로또 번호와 가장 최근에 추첨한 로또 번호 비교해서 당첨 여부 확인
+def lotto(request):
+    lottos = sorted(list(random.sample(range(1,46),6)))
+    real_lottos = [18,34,39,43,44,45]
+    # for i in real_lottos:
+    #     if lottos[i] == real_lottos[i]:
+    #         pass
+    #     else:
+    #         result= False 
+   
+    context = {
+            'lottos' : lottos,
+            'real_lottos' : real_lottos,
+              }    
+    return render(request,'lotto.html', context)
