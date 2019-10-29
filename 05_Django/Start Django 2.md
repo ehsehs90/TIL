@@ -110,3 +110,102 @@
 <h1> pwd {{user_pwd}}</h1>
 ```
 
+## 3. 정적파일(Static Files)
+
+### 3.1 기본 개념
+
+- 정적 파일?
+  -  별도의 가공 없이 사용자에게 그냥 전달만 해주면 되는 파일들, 예를들어 `이미지`,` css`, `JavaScript` 파일들이 있다 서버(프로그래머)가 미리 준비해두고, 사용자는 그냥 받아보기만 하면 된다.
+  - 이미지의 경우 데이터베이스를 통해 저장한 것이 아니라면, 일정한 주소를 통해 이미지를 불러와야 하는데 로컬에 저장했을 경우 그냥 경로만 적어서는 이미지를 불러올 수 없다
+    - 장고에서 제공하는 static 파일 관리 방법을 준수해서 이미지를 불러와야한다.
+
+## 4. URL 로직 분리
+
+###### 이때까지 프로젝트 폴더 안에 있는 `urls.py`에서 모든 URL경로를 관리했다. 근데 애플리케이션이 추가적으로 생기고, 관리해야할 URL경로가 많아지면 매우 복잡해진다. 각자의 애플리케이션에 해당하는 URL은, 애플리케이션이 직접 관리하도록 위임시켜보자.
+
+### 4.1 애플리케이션 하나 더 만들어보기
+
+
+
+
+
+### 4.3 프로젝트 urls.py 로직 수정
+
+###### include 메서드를 사용해서 일정한 경로로 오는 요청들을 애플리케이션의 urls.py에서 처리하도록 위임한다
+
+```python
+#config/urls.py
+
+rom django.contrib import admin
+from django.urls import path, include
+from pages import views
+
+
+
+#사용자가 'pages/'로 시작하는 경로로 들어오면 ,
+#pages 앱 안의 urls.py에서 처리해라! 
+urlpatterns = [
+    path('pages/', include('pages.urls')),
+    path('utilities/', include('utilities.urls')),
+    path('admin/', admin.site.urls),
+]
+```
+
+
+
+### 4.4 애플리케이션 urls.py
+
+```python
+# pages/urls.py (-> 다른 애플리케이션도 형식 동일)
+
+from django.urls import  path
+from . import views
+
+urlpatterns = [
+    path('static_sample/',views.static_sample),
+    path('user_create/', views.user_create),
+    path('user_new/', views.user_new),
+    path('make/', views.art),
+    path('result/', views.result),    
+    path('throw/', views.throw),
+    path('catch/', views.catch),   #'http://localhost/pages/catch/' 라는 경로로 요청했을 경우
+    path('',views.index),  #'http://localhost/pages/'라는 경로로 요청했을 경우
+]
+
+```
+
+### 5. 이름공간(Namespace)정리
+
+- 장고는 기본적으로 탬플릿(스태틱도 동일) 파일을 탐색할 때, 템플릿 폴더를 전부 모아놓고 순서대로 탐색한다
+  - 탐색하는 순서는 settings.py 에 있는 INSTALLED_APPS=[] 리스트 위에서부터 차례대로 탐색한다.
+
+
+
+## 6. 템플릿 상속(Template Inheritance)
+
+### 6.1 기본 개념
+
+- 상속은 기본적으로 `코드의재사용성` 에 초점을 맞춘다
+
+  - 템플릿에서 반복되는 코드를 매번 일일히 치고 있을 여유는 없다. 반복되는 부분은 미리 만들어두고 가져다 쓰자!
+
+  ### 6.2 `base.html` 생성
+
+
+
+
+
+## 7. 개발환경 관리
+
+- 프로젝트를 받아보는 다른 사람이 프로젝트에 필요한 파이썬 패키지들을 정확하게 설치하기 위해 현재 설치되어 있는 패키지 목록들을 넘겨준다.
+  - 깃헙에 업로드시 불필요하게 패키지들을 같이 올려 용량을 높일 필요는 없다. 목록만 넘겨주고, 받는 사람이 본인컴퓨터에 알아서 설치할 수 있도록 환경설정까지만 한다
+- 파이썬 버전의 경우 같이 올라가지 않기 때문에, 되도록 `READ.ME`에 명시해준다.
+
+```bash
+#현재 가상환경에 설치되어 있는 패키지 리스트 목록을 파일로 만들기
+$ pip freeze > requirements.txt
+
+# 패키지 리스트 목록을 읽어서, 없는 패키지를 자동으로 설치하기
+$ pip install -r requirements.txt
+```
+

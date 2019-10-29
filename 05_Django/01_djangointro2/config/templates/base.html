@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>
+  <!-- title is here -->
+{% block title %}
+ 첫번째 장고 앱
+{% endblock %}
+    </title>
+  
+  <!-- css is here -->
+  {% block css %}
+  {% endblock %}
+</head>
+<body>
+    <h1>base.html 템플릿을 상속받았습니다.</h1>
+
+<!--content is here... -->
+ {% block body %}
+
+ {% endblock %}
+</body>
+</html>

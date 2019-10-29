@@ -1,4 +1,11 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
 <form action ="/pages/catch/" method = "GET">
     <input type="text" name = "message">
     <input type="submit" value="던지자">
 </form>
+{% endblock %}
