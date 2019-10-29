@@ -6,11 +6,11 @@
 
 - 가장 많이 사용되는 자료형 + 웹 개발 하면서 마주칠 가능성이 가장 높음
 
-- 딕셔너리는 기본적으로 key 와 value구조
+- 딕셔너리는 기본적으로 `key` 와 `value` 의 구조
 
-  - Key : srting, integer, flosat, boolean 가능! 하지만 list, dictionary는 안된다
+  - Key : `srting`, `integer`, `flosat`, `boolean` 가능! 하지만 `list`, `dictionary`는 안된다
 
-  - Value: 모든 자료형 가능, list 와 dictionary도 가능하다.
+  - Value: 모든 자료형 가능, `list` 와 `dictionary`도 가능하다.
 
     
 
