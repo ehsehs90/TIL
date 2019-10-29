@@ -140,3 +140,19 @@ path('image/<str:width>/<str:height>/',views.image),
 </body>
 ```
 
+
+
+
+
+
+
+
+
+### DTL(Django Template Language)
+
+- 장고에서 사용하는 템플릿 엔진으로, DTL이 기본적으로 내장되어 있다
+  - 플라스크에서 사용하던 jinja2 템플릿 엔진과 비슷하다
+  - {% for %}
+
+- jinja2 와 마찬가지로 조건문, 반복문, 변수 치환, 필터 등의 기능을 제공한다
+
