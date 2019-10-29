@@ -53,3 +53,7 @@ def user_create(request):
         'user_pwd' : user_pwd,
     }
     return render(request, 'user_create.html',context)
+
+
+def static_sample(request):
+    return render(request, 'static_sample.html')
