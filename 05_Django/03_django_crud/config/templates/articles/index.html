@@ -7,11 +7,9 @@
 <hr>
 
 {% for article in articles %}
-<p>글 번호 : {{article.pk}}</p>
-<p>글 제목 :{{article.title}} </p>
-<p>글 내용 : {{article.content}}</p>
-<p>생성 시각 {{article.created_at}}:</p>
-<p>수정 시각 {{article.updated_at}}:</p>
+
+<p>[{{article.pk}}] {{article.title}}</p>
+<a href="/articles/{{article.pk }}">[DETAIL]</a>
 <hr>
 {% endfor %}
 {% endblock %}
