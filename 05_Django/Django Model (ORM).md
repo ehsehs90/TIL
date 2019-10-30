@@ -1,4 +1,4 @@
-## ?
+## 19.10.30(수) : Django Model (ORM)
 
 - 장고MTV 패턴
   - Model
@@ -41,8 +41,8 @@
 - **우리가 ORM 을 사용하는 이유?**
 
   - SQL문에 종속되지 않고 데이터를 객체 형태로 다루기 위해(프로그래밍언어만 알아도 DB를 다룰 수 있음)
-
-  ### 2.1  Create
+    
+### 2.1  Create
 
   ```sqlite
   #첫번째 방법
@@ -104,5 +104,51 @@ articles = Art
 
 ```sqlite
 
+```
+
+### 2.4 Delete
+
+```bash
+
+```
+
+
+
+
+
+### 2.5 Django_extensions
+
+기본 Django Shell은 직접 모델을 import 해주어야 하는 불편함이 있었지만
+
+`shell_plus` 는 필요한 모델을 자동으로 import 해주기 때문에 편리하다.
+
+- 설치하기
+
+``` bash
+$ pip install  django-extensions
+```
+
+- 앱 등록하기
+
+```python
+#settings.py
+INSTALLED_APPS =[
+    ...
+    'django_extensions',
+    ...
+]
+```
+
+- shell 실행하기
+
+```bash
+$ python manage.py shell_plus
+```
+
+```python
+# Shell Plus Model Imports
+from articles.models import Article
+...
+Ipython 7.9.0 -- An enhanced Interactive Python. Type '?' for help.
 ```
 
