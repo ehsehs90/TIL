@@ -8,9 +8,7 @@
 $ django-admin startproject config .
 ```
 
-
-
-### 0.2애플리케이션 생성
+### 0.2 애플리케이션 생성
 
 ```bash
 $ python manage.py startapp articles
@@ -18,13 +16,25 @@ $ python manage.py startapp articles
 
 ```python
 #settings.py : 출생신고 까먹지 말자
-
+INSTALLED_APPS = [
+    'articles',
+    ...
+]
 
 ```
 
-
-
 ### 0.3 URL 분리(위임)
+
+```python
+# 경로설정
+TEMPLATES = [
+    {
+       ...
+        'DIRS': [os.path.join(BASE_DIR,'config','templates')],
+            ...
+    }
+]
+```
 
 ```python
 #config/urls.py
@@ -45,6 +55,8 @@ urlpatterens = [
     path('', views.index),
 ]
 ```
+
+
 
 
 
@@ -95,7 +107,7 @@ $ python manage.py migrate
 
 - 추가정보
 
-  - `showmigrations`:makemigrations를 통해 만든 설계도가 실제DB에 반영된 상태인지 아닌지 확인
+  - `showmigrations ` :  makemigrations를 통해 만든 설계도가 실제DB에 반영된 상태인지 아닌지 확인
 
   - `sqlmigrate`:실제 DB에 반영하기 전 SQL쿼리문으로 바뀐 모습 확인
 
@@ -317,7 +329,7 @@ urlpatterns = [
 
 ### 4.DELETE
 
-
+####헬로 괴도 키드 왔다감..
 
 
 
