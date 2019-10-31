@@ -2,23 +2,25 @@ import requests
 from django.shortcuts import render
 from faker import Faker
 from .models import Jobs
-# Create your views here.
 
+# Create your views here.
+# views 함수에서 모델객체를 사용하려면 import 해주어야 한다.
 
 def create(request):
     name = request.POST.get('name')
-     #db에 있는지 없는지 확인  필터걸기(2개이상은 에러생기므로)
+    #db에 있는지 없는지 확인 필터걸기 (2개이상은 에러 생기기 때문)
     user = Jobs.objects.filter(name=name).first()
     # past_job = request.GET.get('past_job')
 
     #유저 정보가 있을때
     if user:
-        #r기존 직업정보 가져오기
+        #기존 직업정보 가져오기
         past_job = user.past_job
         jobs =Jobs(name=name,past_job=past_job)
         
     #유저 정보 없을 때    
     else:
+        #db에 저장
         faker = Faker()
         past_job = faker.job()
         jobs = Jobs(name=name,past_job=past_job)
