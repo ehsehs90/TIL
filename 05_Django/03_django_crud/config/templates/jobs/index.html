@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 
+
+{% block css %}
+  <link rel="stylesheets" href="{% static 'stylesheets/sample.css'%}"
+{% endblock %}
 {% block body %}
 {% comment %} {% url 'articles:create' %} {% endcomment %}
 <h1 class ="text-center">전생에 무엇이었을까요.....</h1>
@@ -12,5 +17,6 @@
     <input type ="submit">
 </form>
 <hr>
+ <img src="{% static 'images/wowo.jpg' %}" alt="아이즈원 장원영" weight ="500px">
 {% comment %} <a href = "/articles/index">[BACK] </a> {% endcomment %}
 {% endblock %}
