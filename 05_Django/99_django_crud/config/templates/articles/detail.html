@@ -1,17 +1,19 @@
+<!-- detail.html -->
 {% extends 'base.html' %}
 
 {% block body %}
 <h1 class="text-center">DETAIL</h1>
-
 <p>글 번호 : {{article.pk}}</p>
-
 <p>글 제목 : {{article.title}}</p>
-
 <p>글 내용 : {{article.content}}</p>
 <p>생성 시각 : {{article.created_at}}</p>
 <p>수정 시각 : {{article.updated_at}}</p>
 <hr>
-<a href="{% url 'articles:index' %}">[BACK]</a>
-<a href="{% url 'articles:edit' article.pk %}">[EDIT]</a>
-<a href="{% url 'articles:delete' article.pk %}">[DELETE]</a>
+<a href="/articles/index">[back]</a>
+<br>
+<a href="/articles/{{article.pk}}/edit/">[EDIT]</a>
+<br>
+<a href="/articles/{{article.pk}}/delete/">[DELETE]</a>
+{% comment %} 
+<a href="{% url '/articles/{{article.pk}}/edit' %}">[EDIT]</a> {% endcomment %}
 {% endblock %}

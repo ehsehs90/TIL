@@ -3,13 +3,19 @@
 
 
 <h1 class ="text-center"> articles의 index.html입니다</h1>
-<a href = "/articles/new/"> [new] </a>
+{% comment %} <a href = "{% url 'new' %}"> [new] </a> {% endcomment %}
+<a href = "{% url 'articles:new' %}"> [new] </a>
 <hr>
 
 {% for article in articles %}
 
-<p>[{{article.pk}}] {{article.title}}</p>
-<a href="/articles/{{article.pk }}">[DETAIL]</a>
+<p>[{{article.pk}}] {{article.title}} </p>
+{% comment %} <p>{{article.created_at}} </p>
+<p>{{article.updated_at}}</p> {% endcomment %}
+
+
+<a href="/articles/{{article.pk}}/">[DETAIL]</a>
+<a href="{% url 'articles:detail' article.pk %}">[DETAIL]</a> <!-- url에 부여한 name 을 장고가 제공하는 템플릿 안에 넣어준다 + pk붙이고 싶으면 , 안하고 그대로 붙여-->
 <hr>
 {% endfor %}
 {% endblock %}

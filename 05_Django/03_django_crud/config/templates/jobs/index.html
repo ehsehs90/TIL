@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% comment %} {% url 'articles:create' %} {% endcomment %}
+<h1 class ="text-center">전생에 무엇이었을까요.....</h1>
+{% comment %} <form action="/articles/create/" method="POST"> {% endcomment %}
+<form action="/jobs/create/" method="POST">
+    {% csrf_token %}
+    <hr>
+    NAME : <input type="text" name="name">
+    {% comment %} past_job: <textarea name ="past_job" cols="10" rows="10"></textarea><br> {% endcomment %}
+    <input type ="submit">
+</form>
+<hr>
+{% comment %} <a href = "/articles/index">[BACK] </a> {% endcomment %}
+{% endblock %}

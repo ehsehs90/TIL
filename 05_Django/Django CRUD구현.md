@@ -145,7 +145,7 @@ def create(request):
 {% block body %}
 <h1 class ="text-center">NEW</h1>
 <form action="/articles/create/" method="GET">
-    {% csrf_token %}}
+    {% csrf_token %}
     TITLE : <input type="text" name="title"><br>
     CONTENT: <textarea name ="content" cols="30" rows="10"></textarea><br>
     <input type ="submit">
@@ -208,7 +208,7 @@ def index(request):
 {% for article in articles %}
 	<p>글 번호 : {{article.pk}}</p>
 	...
-	<p>수정시각 : {[article.updated_at]}</p>
+	<p>수정시각 : {{article.updated_at}}</p>
 	<hr>
 {% endfor %}
 {% endblock %}

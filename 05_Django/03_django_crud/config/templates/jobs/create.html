@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block body %}
+{% comment %} {% url 'articles:create' %} {% endcomment %}
+<h1 class ="text-center">{{jobs.name}}님의 과거는...<hr>
+{{jobs.past_job}}</h1>
+{% comment %} <form action="/articles/create/" method="POST"> {% endcomment %}
+<img src ={{img_url}} alt =  "그림" width="500px" height="500px">
+<hr>
+{% comment %} <a href = "/articles/index">[BACK] </a> {% endcomment %}
+{% endblock %}

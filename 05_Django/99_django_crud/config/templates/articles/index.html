@@ -1,1 +1,21 @@
-<h1> articles의 index입니다</h1>
+<!-- articles/index.html -->
+
+{% extends 'base.html' %}
+{% block body %}
+
+
+<h1 class ="text-center"> articles의 index.html입니다</h1>
+<a href = "/articles/new/"> [new] </a>
+<hr>
+{% for article in articles %}
+	<p>글 번호 : {{article.pk}}</p>
+	
+	<p>수정시각 : {{article.updated_at}}</p>
+
+ <a href="/articles/{{article.pk}}/">[DETAIL]</a>
+
+	<hr>
+{% endfor %}
+
+
+{% endblock %}

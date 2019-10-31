@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block body %}
+
+
+<h1 class ="text-center"> student의 index.html입니다</h1>
+{% comment %} <a href = "{% url 'new' %}"> [new] </a> {% endcomment %}
+<a href = "/student/new/"> [new] </a>
+<hr>
+
+{% for student in student %}
+
+<p>[{{student.pk}}] {{student.title}}</p>
+
+
+<a href="/student/{{student.pk}}/">[DETAIL]</a>
+{% comment %} <a href="{% url 'articles:detail' article.pk %}">[DETAIL]</a> <!-- url에 부여한 name 을 장고가 제공하는 템플릿 안에 넣어준다 + pk붙이고 싶으면 , 안하고 그대로 붙여-->  {% endcomment %}
+<hr>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h1 class="text-center">DETAIL</h1>
+
+<p>글 번호 : {{student.pk}}</p>
+
+<p>글 제목 : {{student.title}}</p>
+
+<p>글 내용 : {{student.content}}</p>
+<p>생성 시각 : {{student.created_at}}</p>
+<p>수정 시각 : {{student.updated_at}}</p>
+<hr>
+<a href="/student/index/">[BACK]</a>
+<a href="/student/{{student.pk}}/edit/">[EDIT]</a>
+<a href="/student/{{student.pk}}/delete">[DELETE]</a> 
+{% endblock %}
