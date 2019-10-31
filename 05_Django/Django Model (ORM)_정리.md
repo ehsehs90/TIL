@@ -420,7 +420,7 @@ Out[12]: <Article: [1] : first>
 ##### order_by()
 
 - 정렬
-  -  `'`  : 내림차순
+  -  `-`  : 내림차순
 
 ```python
 In [16]: Article.objects.order_by('pk')
