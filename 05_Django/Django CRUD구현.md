@@ -109,7 +109,7 @@ $ python manage.py migrate
 
   - `showmigrations ` :  makemigrations를 통해 만든 설계도가 실제DB에 반영된 상태인지 아닌지 확인
 
-  - `sqlmigrate`:실제 DB에 반영하기 전 SQL쿼리문으로 바뀐 모습 확인
+  - `sqlmirate`:실제 DB에 반영하기 전 SQL쿼리문으로 바뀐 모습 확인
 
     ```bash
     $ python manage.py sqlmigrate
@@ -329,7 +329,28 @@ urlpatterns = [
 
 ### 4.DELETE
 
-####헬로 괴도 키드 왔다감..
+```python
+#views.py : Variable Routing 적용
+# 사용자로부터 요청한 URL로부터 게시글 PK 값을 건네받는다.
+def delete(request, article_pk):
+    article= Article.objects.get(pk=article_pk)
+    article.delete()
+    
 
+    return redirect('/articles/index/')
+```
 
+```python
+# urls.py : Variable Routing 적용
+
+urlpatterns = [
+    path('<int:article_pk>/delete/',views.delete), 
+    ...
+]
+
+```
+
+```python
+
+```
 

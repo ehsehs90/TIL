@@ -23,12 +23,10 @@ def create(request):
         past_job = faker.job()
         jobs = Jobs(name=name,past_job=past_job)
         
-        jobs.save()
-
-        
+        jobs.save() 
 
 
-        #GIPHY API
+    #GIPHY API
     api_key = "EJrj23vHajiPsSLk3iovWjeusslgcm95"
     api_url = "http://api.giphy.com/v1/gifs/search"
 
