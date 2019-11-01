@@ -46,3 +46,4 @@ def update(request, student_pk):
     student.content = request.POST.get('content')
     student.save()
     return redirect(f'/student/{student.pk}/')
+

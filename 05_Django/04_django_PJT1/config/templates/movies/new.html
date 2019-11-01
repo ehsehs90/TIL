@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+
+
+
+
+
+
+{% block body %}
+
+<h1 class = "text-center">NEW</h1>
+<a href="/movies/index">[BACK]</a>
+<hr>
+
+
+<form action ="/movies/create/"  method ="POST">
+{% csrf_token %}
+  <div class="form-group">
+    <label for="exampleInputEmail1">TITLE</label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter title" name="title">
+    <small id="emailHelp" class="form-text text-muted">영화제목을 입력하세요</small>
+  </div>
+  <p>
+  <div class="form-group">
+    <label for="exampleInputEmail1">TITLE_EN </label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter title" name="title_en">
+    <small id="emailHelp" class="form-text text-muted">영화 영어제목을 입력하세요</small>
+  </div>
+  <p>
+  <div class="form-group">
+    <label for="exampleInputEmail1">AUDIENCE </label>
+    <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter audience" name="audience">
+    <small id="emailHelp" class="form-text text-muted">관객 수를 입력하세요</small>
+  </div>
+  <p>
+  <div class="form-group">
+    <label for="exampleInputEmail1">OPEN_DATE </label>
+    <input type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter open_date"  name="open_date">
+    <small id="emailHelp" class="form-text text-muted">영화 개봉일을 입력하세요</small>
+  </div>
+  <p>
+    <div class="form-group">
+    <label for="exampleInputEmail1">GENRE </label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter genre"  name="genre">
+    <small id="emailHelp" class="form-text text-muted">영화 장르를 입력하세요</small>
+  </div>
+  <p>
+  <div class="form-group">
+    <label for="exampleInputEmail1">WATCH_GRADE </label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter watch_grade" name="watch_grade">
+    <small id="emailHelp" class="form-text text-muted">영화 관람 등급을 입력하세요</small>
+  </div>
+  <p>
+  <div class="form-group">
+    <label for="exampleInputEmail1">SCORE: </label>
+    <input type="number"  step="0.01" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter score" name="score">
+    <small id="emailHelp" class="form-text text-muted">영화 평점을 입력하세요</small>
+  </div>
+  <p>
+    <div class="form-group">
+    <label for="exampleInputEmail1">POSTER_URL: </label>
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter poster_url" name="poster_url">
+    <small id="emailHelp" class="form-text text-muted">영화포스터 url을 입력하세요</small>
+  </div>
+  <p>
+  <div class="form-group">
+    <label for="exampleInputEmail1">DESCRIPTION </label>
+    <textarea type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="description" cols="30" rows="10"></textarea>
+  </div>
+  <p>
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+
+
+
+{% comment %} 
+<form action ="/movies/create/"  method ="POST">
+{% csrf_token %}
+  TITLE: <input type="text" name="title"><br>
+  TITLE_EN : <input type="text" name="title_en"><br>
+  AUDIENCE : <input type="number" name="audience"><br>
+  OPEN_DATE :<input type="date" name="open_date"><br>
+  GENRE : <input type="text" name="genre"><br>
+  WATCH_GRADE : <input type="text" name="watch_grade"><br>
+  SCORE: <input type="number" name="score" step="0.01"><br>
+  POSTER_URL: <input type="text" name="poster_url"><br>
+  DESCRIPTION :<br>
+   <textarea name="description" cols="30" rows="10"></textarea>
+  <br>
+  <input type="submit"> {% endcomment %}
+
+</form>
+
+
+
+
+
+{% endblock %}

@@ -2,12 +2,26 @@
 
     {% block body %}
 
-<h1 class = "text-center"> movie의 index.html입니다</h1>
+<h1 class = "text-center"> MOVIE INDEX</h1>
+<br>
+<a href="/movies/new">[영화 정보 생성]</a>
 <hr>
+<hr>
+
+<div class="card" style="width: 22rem;" orientation="horizental">
 {% for movie in movies %}
-[{{movie.pk}}] {{movie.title}} {{movie.title_en}} 
-<p>{{movie.audience}} {{movie.open_date}}<p>
- <hr>
-{% endfor %}
+  <img src="{{movie.poster_url}}" class="card-img-top" alt="..." weight="200px" height="320px">
+  <div class="card-body">
+    <h5 class="card-title">[{{movie.title}}]</h5>
+    <p class="card-text">[평점] {{movie.score}} </p>
+    <a href="/movies/{{movie.pk}}" class="btn btn-primary">더보기</a>
+    <hr><br>
+    {% endfor %}
+  </div>
+</div>
+
+
+
+
     {% endblock body %}
 

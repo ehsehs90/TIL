@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<br><br>
+<h1>{{movie.title}} detail 정보 </h1><br>
+<a href="/movies/{{movie.pk}}/edit" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">EDIT</a>  
+<a href="/movies/index/" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">BACK </a>
+<a href="/movies/{{movie.pk}}/delete/" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">DELETE </a>
+{% comment %} <a href = "/movies/{{movie.pk}}/edit">[EDIT]</a>
+<a href = "/movies/index/">[BACK]</a>
+<a href = "/movies/{{movie.pk}}/delete/">[DELETE]</a> {% endcomment %}
+<hr>
+{% comment %} {% for movie in movie %} {% endcomment %}
+ <br>
+[{{movie.pk}}] {{movie.title}}  {{movie.title_en}} <p>
+<p>[누적관객수] {{movie.audience}} <p>
+<p>[개봉일] {{movie.open_date}}<p>
+<p>[장르] {{movie.genre}}
+<p>[등급] {{movie.watch_grade}}<p>
+<p>[누적평점] {{movie.score}}
+<p>[줄거리] {{movie.description}}<p>
+<img src = {{movie.poster_url}} alt ="{{movie.title}}" width = "550px" height="600px" >
+ <hr>
+
+{% comment %} <a href = "/movies/{{movie.pk}}/edit">EDIT</a> {% endcomment %}
+
+
+{% comment %} {% endfor %} {% endcomment %}
+{% endblock %}
