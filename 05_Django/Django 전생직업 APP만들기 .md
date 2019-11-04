@@ -290,7 +290,7 @@ def create(request):
 
 ```python
     #GIPHY API
-    api_key = "EJrj23vHajiPsSLk3iovWjeusslgcm95"
+    api_key = "EJrj23v________k3iovWjeusslgcm95"
     api_url = "http://api.giphy.com/v1/gifs/search"
 
     data = requests.get(f'{api_url}?api_key={api_key}&q={past_job}&limit=1&lang=ko').json()

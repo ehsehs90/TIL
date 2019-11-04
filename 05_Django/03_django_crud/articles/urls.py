@@ -8,11 +8,17 @@ app_name = 'articles'
 
 
 urlpatterns = [
+
+    # create / update url 통합하기
     path('<int:article_pk>/update/', views.update, name ='update'), 
-    path('<int:article_pk>/edit/', views.edit, name ='edit'), #  UPDATE Logic - 폼 전달
+    #GET (edit) / POST (update)
+
+
+
+    # path('<int:article_pk>/edit/', views.edit, name ='edit'), #  UPDATE Logic - 폼 전달
     path('<int:article_pk>/delete/', views.delete, name ='delete'), #  DELETE Logic
     path('<int:article_pk>/', views.detail, name = 'detail'), # READ Logic - Detail
-    path('create/', views.create, name ='create'),  # CREATE Logic - 데이터베이스에 저장
-    path('new/', views.new, name ='new'),    #CREATE Logic - 사용자에게 폼 전달
+    path('create/', views.create, name ='create'),  # GET(new) / POST (create)
+    # path('new/', views.new, name ='new'),    #CREATE Logic - 사용자에게 폼 전달
     path('index/', views.index ,name ='index') #READ Logic - Index
 ]

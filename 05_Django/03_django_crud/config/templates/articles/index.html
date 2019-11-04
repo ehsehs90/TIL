@@ -4,7 +4,7 @@
 
 <h1 class ="text-center"> articles의 index.html입니다</h1>
 {% comment %} <a href = "{% url 'new' %}"> [new] </a> {% endcomment %}
-<a href = "{% url 'articles:new' %}"> [new] </a>
+<a href = "{% url 'articles:create' %}"> [new] </a>
 <hr>
 
 {% for article in articles %}

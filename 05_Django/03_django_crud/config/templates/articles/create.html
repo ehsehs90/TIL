@@ -1,6 +1,18 @@
 {% extends 'base.html' %}
+
 {% block body %}
 
-<h1> 하이 </h1>
+
+<h1 class ="text-center">NEW</h1>
+{% comment %} <form action="/articles/create/" method="POST"> {% endcomment %}
+<form action="{% url 'articles:create' %}" method="POST">
+    {% csrf_token %}}
+    TITLE : <input type="text" name="title"><br>
+    CONTENT: <textarea name ="content" cols="30" rows="10"></textarea><br>
+    <input type ="submit">
+</form>
 <hr>
+{% comment %} <a href = "/articles/index">[BACK] </a> {% endcomment %}
+<a href = "{% url 'articles:index' %}">[BACK] </a>
+
 {% endblock %}

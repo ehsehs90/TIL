@@ -323,7 +323,62 @@ urlpatterns = [
 
 ### 3.UPDATE
 
-### 
+```python
+# 사용자한테 게시글 수정 폼을 전달
+# 사용자가 게시글을 수정할 때 원래의 게시글 내용이 필요하다 - article_pk값필요
+
+def edit(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+    context = {'article': article}
+    return render(request, 'articles/edit.html', context)
+
+
+## 수정 내용 전달받아서 DB에 저장(반영)
+def update(request, article_pk):
+
+	# 1. 수정할 게시글 인스턴스 가져오기
+	article = Article.objects.get(pk=article_pk)   
+	# 2. 폼에서 전달받은 데이터 덮어쓰기
+	article.title=request.POST.get('title')
+	article.content = request.POST.get('content')    
+	#3. DB저장    
+	article.save()
+	# 4. 저장 끝났으면 게시글 Detail로 이동시키기
+	return redirect(f'/articles/{article.pk}/')  
+```
+```python
+#urls.py
+
+path('<int:article_pk>/update/', views.update, name ='update'), 
+path('<int:article_pk>/edit/', views.edit, name ='edit'), 
+#  UPDATE Logic - 폼 전달
+```
+
+
+
+```html
+<!-- update.html -->
+
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1 class ="text-center"> CREATE </h1>
+<form action="{% url 'articles:update' article.pk %}" method="POST">
+    {% csrf_token %}}
+    TITLE : <input type="text" name="title" value="{{article.title}}"><br>  <!-- input 할 때 값 미리 채워주는것 value-->
+    CONTENT: <textarea name ="content" cols="30" rows="10">
+    {{article.content}}
+    
+    </textarea><br> <!--value 기능? 이따로 없음 :: texetarea 열고 닫히는 구간에 넣어준다--> 
+    <input type ="submit">
+</form>
+<hr>
+<a href = "{% url 'articles:detail' article.pk %}">[BACK] </a>
+
+
+{% endblock %}
+```
 
 
 
