@@ -19,11 +19,30 @@
 <p>[등급] {{movie.watch_grade}}<p>
 <p>[누적평점] {{movie.score}}
 <p>[줄거리] {{movie.description}}<p>
-<img src = {{movie.poster_url}} alt ="{{movie.title}}" width = "550px" height="600px" >
+<img src = {{movie.poster_url}} alt ="{{movie.title}}" width = "440px" height="400px" >
  <hr>
 
 {% comment %} <a href = "/movies/{{movie.pk}}/edit">EDIT</a> {% endcomment %}
 
 
 {% comment %} {% endfor %} {% endcomment %}
+
+
+
+<form action = "/movies/{{movie.pk}}/comments/" method='POST'>
+{% csrf_token %}
+<input type="text" name='content' >
+<input type= "submit" value="댓글등록">
+</form>
+
+{% comment %} {% for movie in movies %} {% endcomment %}
+
+{% for comment in comments %}
+<li>{{comment.pk}}] {{comment.content}}
+<form action = "/movies/{{movie.pk}}/comments/{{comment_pk}}" method ="POST">
+{% csrf_token %}
+<input type= "submit" value="댓글삭제" name="comment">
+</form>
+{% endfor %}
+
 {% endblock %}

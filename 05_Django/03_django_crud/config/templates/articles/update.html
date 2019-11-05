@@ -2,18 +2,38 @@
 
 {% block body %}
 
+<!-- 
+    input type file일 경우 value 값 지정을 못한다. 당장 해결 방법은?    
+    -> 이미지 파일은 바이너리 데이터(하나의 덩어리)로 들어가서, 텍스트를 수정하듯이 일부만
+    수정하는게 불가능하다. 새로운 사진을 덮어씌우는 방식을 사용
 
-<h1 class ="text-center">CREATE </h1>
-<form action="{% url 'articles:update' article.pk %}" method="POST">
+
+    -> 똑같은 사진을 업로드 하도록 유도. 사진 파일을 업데이트 페이지에 띄워놓는다.
+-->
+
+<h1 class ="text-center">EDIT </h1>
+<p> 업로드 되어있는 사진</p>
+<img src="{{article.image.url}}" alt="{{article.image}}" wight='140px' height="200px">
+<form action="{% url 'articles:update' article.pk %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}}
     TITLE : <input type="text" name="title" value="{{article.title}}"><br>  <!-- input 할 때 값 미리 채워주는것 value-->
     CONTENT: <textarea name ="content" cols="30" rows="10">
-    {{article.content}}
-    
+    {{article.content}}    
     </textarea><br> <!--value 기능? 이따로 없음 :: texetarea 열고 닫히는 구간에 넣어준다--> 
+    <form action="{% url 'articles:create' %}" method="POST" enctype='multipart/form-data'>
+    {% csrf_token %}}
+    TITLE : <input type="text" name="title"><br>
+    CONTENT: <textarea name ="content" cols="30" rows="10"></textarea><br>
+    <label for='image'>IMAGE</label>
+    <input type ="file" name="image" id="image" accept="image/*">
+    <input type ="submit">
+</form>
+
+    
     <input type ="submit">
 </form>
 <hr>
 <a href = "{% url 'articles:detail' article.pk %}">[BACK] </a>
+
 
 {% endblock %}

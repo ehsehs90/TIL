@@ -11,3 +11,19 @@ class Movie (models.Model):
     score = models.FloatField()
     poster_url = models.TextField()
     description = models.TextField()
+
+    def __str__(self):
+        return f'[{self.pk}] {self.title}'
+
+
+class Comment (models.Model):
+    title = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    content = models.CharField(max_length=60)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+    class Meta:
+        ordering=['-pk',]
+
+    def __str(self):
+        return self.content

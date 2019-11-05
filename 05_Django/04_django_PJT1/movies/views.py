@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Movie
+from .models import Movie, Comment
 
 # Create your views here.
 def index(request):
@@ -35,7 +35,9 @@ def create(reqeust):
 def detail(request, movie_pk):
     # context={}
     movie = Movie.objects.get(pk=movie_pk)
-    context = {'movie' : movie}
+    comments = movie.comment_set.all()
+    context = {'movie' : movie,
+                'comments': comments}
     
     return render(request, 'movies/detail.html', context)
 
@@ -71,3 +73,28 @@ def delete(request, movie_pk):
     
 
     return redirect('/movies/index/')
+
+
+def comment_create(request, movie_pk):
+
+    movie = Movie.objects.get(pk=movie_pk)
+    if request.method=="POST":
+        comment = Comment()
+        comment.content=request.POST.get('content')
+        comment.title = movie
+        comment.save()
+
+        return redirect(f'/movies/{movie.pk}/',movie_pk)
+    else:
+        return redirect('/movies/detail/.html',movie_pk)
+
+
+def comment_delete(request, movie_pk,comment_pk):
+
+    if request.method =="POST":
+        comment=Comment.objects.get(pk=comment_pk)
+        comment.delete()
+        return redirect(f'/movies/{movie.pk}/',movie_pk)
+    else:
+        return redirect('/movies/detail/.html',movie_pk)
+       

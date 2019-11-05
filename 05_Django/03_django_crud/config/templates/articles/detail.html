@@ -1,16 +1,31 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% block body %}
 <h1 class="text-center">DETAIL</h1>
+<img src = {% static 'articles/images/wowo.jpg' %} width="300px" height="300px">
+<img src = {% static 'articles/images/jj.jpg' %} width="300px" height="300px">
+
+{% comment %} <h1>{{ article.image.url }}</h1> {% endcomment %}
+<!-- 
+  1. 샘플 이미지(static)를 넣어두고, 이미지 없는 게시글은 샘플 이미지가 나오도록 한다
+  2. 이미지 있는 경우에만 이미지를 보여준다
+  -->
+
+{% if article.image %}
+<img src="{{ article.image.url }}" alt="{{ article.image }}">
+{% else %}
+  <p>사진이 없어요.. </p>
+  <img src="{% static 'articles/images/no_image.png' %}" alt ="no_image">
+{% endif %}
 
 <p>글 번호 : {{article.pk}}</p>
-
 <p>글 제목 : {{article.title}}</p>
-
 <p>글 내용 : {{article.content}}</p>
 <p>생성 시각 : {{article.created_at}}</p>
 <p>수정 시각 : {{article.updated_at}}</p>
 <hr>
+
 <a href="{% url 'articles:index' %}">[BACK]</a>
 <a href="{% url 'articles:update' article.pk %}">[EDIT]</a>
 {% comment %} <a href="{% url 'articles:delete' article.pk %}">[DELETE]</a> {% endcomment %}
@@ -20,5 +35,31 @@
   <input type="submit" value="delete" onclick="return confirm('너 징챠루 삭제할거야...?')">
 </form>
 
+<hr>
 
+<form action ="{% url  'articles:comments_create' article.pk %}"  method="POST" >
+  {% csrf_token %}
+<input type="text"  col="20" name="content" >
+<input type = "submit" value="댓글등록">
+</form>
+
+
+{{comments|length}}개의 댓글이 있습니다
+{{article.comment_set.all|length}}
+{{comments.count}} 
+
+{% comment %} 는 count 메서드를 사용해서 데이터베이스에 쿼리를 한번 더 날려서 정보를 가져오므로, 미세하지만 속도가 조금 느리다는 단점이 있다. {% endcomment %}
+
+<!-- 댓글 띄우기 (for문 돌려서) 이때 comments  받아오려면 detail 함수에 context로 comment 보내줘야 함-->
+<p>
+<hr>
+{% for comment in comments %}
+<li>{{comment.pk}}] {{comment.content}}
+<form action = "{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST" style ="display:inline;">
+ {% csrf_token %}
+<input type = "submit" value="댓글삭제" name="comment">
+{% comment %} {% empty %}
+<p>등록된 댓글이 없습니다</p> {% endcomment %}
+</form>
+{% endfor %}
 {% endblock %}

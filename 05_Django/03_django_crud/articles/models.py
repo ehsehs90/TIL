@@ -4,6 +4,10 @@ from django.db import models
 class Article(models.Model):
     title = models.CharField(max_length=40)
     content = models.TextField()
+    # blank=True : 공백 가능 #원래대도라면 새로운 필드를 추가하고 나면 makemigrations 할때, 어떤 값을 넣을건지 Django가 물어본다.
+    #기본적으로 blank=False 이기 때문이다
+    # blank =true -> '빈 문자열이 들어가도 된다'
+    image = models.ImageField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

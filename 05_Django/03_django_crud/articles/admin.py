@@ -4,7 +4,7 @@ from .models import Article, Comment
 
 # Register your models here.
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title','created_at','updated_at',)
+    list_display = ('pk', 'title','created_at','image','updated_at',)
 
 class CommentAdmin(admin.ModelAdmin):
 

@@ -1,16 +1,31 @@
 {% extends 'base.html' %}
 
 {% block body %}
+<!--
+    entype 
+    1. application/x-www-form-urlencoded:(기본값) 모든 문자 인코딩
+    2. multipart/form-data : 파일 형태 첨부시 필수 사용 / 데이터를 나누어 전송한다.
+    3. text/plain : 인코딩x -> 사실상 안쓰임
+
+-->
+
+{% comment %} <form action = "{% url 'articles:create' %}" method ="POST" entype="multipart/form-data">
+ {% csrf_token %}}
+<input type="submit">
+</form> {% endcomment %}
 
 
 <h1 class ="text-center">NEW</h1>
 {% comment %} <form action="/articles/create/" method="POST"> {% endcomment %}
-<form action="{% url 'articles:create' %}" method="POST">
+<form action="{% url 'articles:create' %}" method="POST" enctype='multipart/form-data'>
     {% csrf_token %}}
     TITLE : <input type="text" name="title"><br>
     CONTENT: <textarea name ="content" cols="30" rows="10"></textarea><br>
+    <label for='image'>IMAGE</label>
+    <input type ="file" name="image" id="image" accept="image/*">
     <input type ="submit">
 </form>
+
 <hr>
 {% comment %} <a href = "/articles/index">[BACK] </a> {% endcomment %}
 <a href = "{% url 'articles:index' %}">[BACK] </a>
