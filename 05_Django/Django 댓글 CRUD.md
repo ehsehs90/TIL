@@ -37,7 +37,7 @@
 - `urls.py`
 
   - ```python
-     path('<int:article_pk>/comments_create/', views.comments_create, name='comments_create')
+     path('<int:article_pk>/comments/', views.comments_create, name='comments_create')
     ```
 
 - `detail.html`
@@ -100,7 +100,7 @@ def comments_delete(request, article_pk, comment_pk):
 - `urls.py`
 
 ```python
-path('<int:article_pk>/<int:comment_pk>/comments_delete/', views.comments_delete, name='comments_delete'),
+path('<int:article_pk>/<int:comment_pk>/comments/<int:comment_pk>/delete/', views.comments_delete, name='comments_delete'),
     
 ```
 
