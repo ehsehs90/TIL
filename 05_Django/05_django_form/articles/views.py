@@ -48,8 +48,33 @@ def detail(request, article_pk):
 
 def delete(request, article_pk):
     # article= Article.objects.get(pk=article_pk)
-    article = get_object_or_404(Article, pk=article_pk)
-    article.delete()    
+    article = Article.objects.get(pk=article_pk)
+    if request.method =='POST':
+        article.delete()    
+        return redirect('/articles/index/')    
+    else:
 
-    return redirect('/articles/index/')
+        return redirect('articles:detail',article.pk)
+
+
+def update(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    if request.method =='POST':
+        form = ArticleForm(request.POST)
+        #유효성검사
+        if form.is_valid():
+            article.title = form.cleaned_data.get('title')
+            article.content = form.cleaned_data.get('content')
+            article.save()
+            return redirect('articles:detail',article.pk)    
+    else:
+        form = ArticleForm(initial={
+            'title' : article.title,
+            'content' : article.content
+        })
+        # form 에 들어오는 두가지 형식
+        # 1. GET -> 초기값을 폼에 넣어서 사용자에게 던져줌
+        # 2. POST -> is_valid 가 False가 리턴됐을 때, 오류메세지 포함해서 사용자에게 던져줌
+    context ={'form': form}
+    return render(request, 'articles/create.html',context)
 

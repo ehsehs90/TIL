@@ -7,17 +7,23 @@
   <title>Document</title>
 </head>
 <body>
-  
-  <form action = "/articles/create/" method ="POST">
+
+  <a href="{% url 'articles:index' %}">[BACK]</a>
+    
+  <form action = "" method ="POST">
   {% csrf_token %}
+  <h1> create </h1>
+
   {{ form.as_p }} <!-- 각각의 태그를 p 태그로 감싸라 -->
 
   {% comment %} title <br> <input type ="text" name="title">
   <br><br><br>
   content<br> <textarea name ="content" cols="30" rows="10">
   </textarea> {% endcomment %}
-  
+
   <input type = "submit">
   </form>
+
+  <a href="{% url 'articles:index' %}">[BACK]</a>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<!-- detail.html -->
+
 {% extends 'base.html' %}
 
 {% block body %}
@@ -9,5 +9,10 @@
 <p>수정 시각 : {{article.updated_at}}</p>
 <hr>
 <a href="/articles/index">[back]</a>
-<a href="/articles/{{article.pk}}/delete">[delete]</a>
+<a href="{% url 'articles:update' article.pk %}"> [edit]</a>
+{% comment %} <a href="/articles/{{article.pk}}/delete">[delete]</a> {% endcomment %}
+<form action ="/articles/{{article.pk}}/delete/" method="POST">
+{% csrf_token %}
+<input type="submit" >
+</form>
 {% endblock %}
