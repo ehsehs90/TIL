@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 
 {% block body %}
@@ -11,13 +10,27 @@
 <a href="/articles/index">[back]</a>
 <a href="{% url 'articles:update' article.pk %}"> [edit]</a>
 {% comment %} <a href="/articles/{{article.pk}}/delete">[delete]</a> {% endcomment %}
-<form action ="/articles/{{article.pk}}/delete/" method="POST">
-{% csrf_token %}
-<input type="submit" >
+<form action="/articles/{{article.pk}}/delete/" method="POST">
+  {% csrf_token %}
+  <input type="submit">
 </form>
 
 <form action="{% url 'articles:comments_create' article.pk %}" method="POST">
-{{ comment_form }}
-{% csrf_token %}
-<input type = "submit" value ="댓글작성">
+  {{ comment_form }}
+  {% csrf_token %}.
+  <input type="submit" value="댓글작성">
+</form>
+<hr>
+<div class="text-center">
+  <p><b>댓글목록({{ comments|length}})개</b></p>
+  {% for comment in comments %}
+  <p>[{{forloop.revcounter}}]번 댓글 {{comment.content}}</p>
+
+  <form action="{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST" style="display:inline;">
+    {% csrf_token %}
+    <input type="submit" value="댓글삭제" name="comment">
+  </form>
+  {% endfor %}
+</div>
+
 {% endblock %}

@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width={device-width}, initial-scale=1.0">
@@ -9,17 +10,27 @@
   <title>장고 CRUD</title>
 
   {% bootstrap_css %}
- 
+
 </head>
+
 <body>
-    <div class="container">        
+  <div class="container">
+    {% if user.is_authenticated %}
+    <h2> 어서오세요, {{user.username}}</h2>
+    <a href ="{% url 'accounts:logout' %}">로그아웃</a>
+    {% else %}
+    <h3>로그인 하셔야 서비스 이용이 가능합니다.</h3>
+    <a href ='{% url 'accounts:signup' %}'>회원가입</a>
+    <a href ='{% url 'accounts:login' %}'>로그인</a>
+    {% endif %}
+    <hr>
     {% block body %}
-
     {% endblock body %}
-    </div>
+  </div>
 
-    {% bootstrap_javascript jquery='full' %}
-    
+  {% bootstrap_javascript jquery='full' %}
+
 
 </body>
+
 </html>

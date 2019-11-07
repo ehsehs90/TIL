@@ -34,7 +34,7 @@ class ArticleForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
    
     content = forms.CharField(
-        label='내용 입력 하세요',
+        label='댓글',
         widget=forms.Textarea(
             attrs={
                 'class':'content',
