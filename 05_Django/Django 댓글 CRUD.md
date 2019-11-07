@@ -1,5 +1,46 @@
 ## 댓글 CRUD
 
+### 댓글 모델 만들기
+
+- 댓글 모델을 생성한다
+
+```python
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at  =models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    
+    # Model Level에서 Metadata 설정
+    class Meta:
+        ordering = ['-pk',]
+
+    def __str(self):
+        return self.content
+```
+
+- 댓글 모델을 makemigrations 한다
+- 댓글 모델을 migrations한다
+
+
+
+### 댓글모델을 admin에서 관리할 수 있도록 `class`등록하기
+
+```python
+
+```
+
+
+
+### 댓글 인스턴스 하드코딩으로 만들기
+
+```shell
+from articles.models import Article
+```
+
+
+
 
 
 ### 댓글 만들기(C)

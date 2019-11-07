@@ -11,6 +11,7 @@ urlpatterns = [
     # create / update url 통합하기
     # GET (edit) / POST (update)
     # GET(new) / POST (create)
+    path('<int:article_pk>/comments/',views.comments_create, name='comments_create'),
     path('<int:article_pk>/update/',views.update , name='update'),
     path('<int:article_pk>/delete/', views.delete, name= 'delete'),
     path('<int:article_pk>/', views.detail ,name ='detail'), #READ Logic - Index   

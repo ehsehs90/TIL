@@ -18,7 +18,7 @@
     - Thumbnail
     - Resize
 - Crop ...
-    
+  
 - `django-imagekit` : 이미지 썸네일 Helper
   
 - **INSTALLED_APPS 등록**
@@ -256,9 +256,37 @@ def detail(request, article_pk):
     return render(request, 'articles/detail.html', context)
 ```
 
+### DELETE
 
+```python
+def delete(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    if request.method == 'POST':
+        article.delete()
+        return redirect('articles:index')
+    else:
+        return redirect('articles:detail', article.pk)
+```
 
-### 3. Django ModelForm
+### UPDATE
+
+```python
+def update(request, article_pk):
+    article = get_object_or_404(Article, pk=article_pk)
+    if request.method == 'POST':
+        # 두번째 인자로 article 인스턴스를 넘겨준다. (instance 키워드 인자!)
+        form = ArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            article = form.save()
+            return redirect('articles:detail', article.pk)
+    else:
+        # article 인스턴스를 넘겨주어 폼 초기값을 채운다.
+        form = ArticleForm(instance=article)
+    context = {'form': form}
+    return render(request, 'articles/form.html', context)
+```
+
+## 3. Django ModelForm
 
 - 개념
   - Django의 큰 특징 중 하나
@@ -291,4 +319,40 @@ def detail(request, article_pk):
               fields='__all__'
   ```
 
-- update
+- 전체코드
+
+```python
+# ModelForm
+# 1. ModelForm 클래스를 상속받아 사용한다.
+# 2. 메타데이터로 Model 정보를 건네주면, ModelForm이 자동으로 field에 맞춰 input을 생성해준다.
+class ArticleForm(forms.ModelForm):
+    title = forms.CharField(
+        label='제목',
+        max_length=10,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'title',
+                'placeholder': '제목 입력해라...'
+            }
+        )
+    )
+    content = forms.CharField(
+        label='내용',
+        widget=forms.Textarea(
+            attrs={
+                'class': 'content',
+                'placeholder': '내용 입력해라...',
+                'rows': 5,
+                'cols': 30
+            }
+        )
+    )
+
+    # 메타데이터: 데이터의 데이터
+    # ex) 사진 한장 (-> 촬영장비이름, 촬영환경 등)
+    class Meta:
+        model = Article
+        fields = ('title', 'content',)
+        # fields = '__all__'
+```
+

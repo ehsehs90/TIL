@@ -15,4 +15,9 @@
 {% csrf_token %}
 <input type="submit" >
 </form>
+
+<form action="{% url 'articles:comments_create' article.pk %}" method="POST">
+{{ comment_form }}
+{% csrf_token %}
+<input type = "submit" value ="댓글작성">
 {% endblock %}

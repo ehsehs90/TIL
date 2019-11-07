@@ -1,29 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load bootstrap4 %}
 
-  <a href="{% url 'articles:index' %}">[BACK]</a>
-    
-  <form action = "" method ="POST">
+{% block body %}
+{% if request.resolver_match.url_name == 'create' %}
+<h1 class="text-center">CREATE </h1>
+{% else %}
+<h1 class="text-center"> UPDATE </h1>
+{% endif %}
+<hr>
+
+<form action="" method="POST" class="mx-auto">
   {% csrf_token %}
-  <h1> create </h1>
+  {% bootstrap_form form layout='inline' %}
 
-  {{ form.as_p }} <!-- 각각의 태그를 p 태그로 감싸라 -->
-
-  {% comment %} title <br> <input type ="text" name="title">
-  <br><br><br>
-  content<br> <textarea name ="content" cols="30" rows="10">
-  </textarea> {% endcomment %}
-
-  <input type = "submit">
-  </form>
-
+  <div class="text-center">
+    {% buttons submit='제출' reset='초기화' %}
+    {% endbuttons %}
+  </div>
+</form>
+<hr>
+<div class="text-center">
+  {% if request.resolver_match.url_name == 'create' %}
   <a href="{% url 'articles:index' %}">[BACK]</a>
+  {% else %}
+  <a href="{% url 'articles:detail'  article.pk %}">[BACK]</a>
+  {% endif %}
+  {% endblock %}
+
+</div>
 </body>
 </html>

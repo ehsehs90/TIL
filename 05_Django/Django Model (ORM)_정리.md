@@ -199,6 +199,10 @@ out[3]: <QuerySet [<Article:[1]:first><Article:[2]:second>]>
     from articles.models import Article
     ```
 
+    ```shell
+    from 앱이름.models import 모델이름
+    ```
+    
     
 
 ## 2. ORM_CRUD

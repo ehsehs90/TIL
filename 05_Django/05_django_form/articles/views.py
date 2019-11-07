@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Article
-from .forms import ArticleForm
+from .models import Article, Comment
+from .forms import ArticleForm, CommentForm
 
 
 # Create your views here.
@@ -42,7 +42,9 @@ def detail(request, article_pk):
     # article = Article.objects.get(pk=article_pk)
     # 첫번째인자 class 두번째인자 pk
     article = get_object_or_404(Article, pk=article_pk)
+    comment_form = CommentForm()
     context = {'article': article,
+                'comment_form': comment_form,
                  }
     return render(request,'articles/detail.html',context)
 
@@ -79,6 +81,13 @@ def update(request, article_pk):
         # form 에 들어오는 두가지 형식
         # 1. GET -> 초기값을 폼에 넣어서 사용자에게 던져줌
         # 2. POST -> is_valid 가 False가 리턴됐을 때, 오류메세지 포함해서 사용자에게 던져줌
-    context ={'form': form}
+    context ={'form': form,
+            'article': article,
+            }
     return render(request, 'articles/form.html',context)
 
+
+def comments_create(request, article_pk):
+    article = get_object_or_404(Article, pk = article_pk)
+    if request.method =='POST':
+        pass
