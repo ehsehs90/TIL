@@ -453,18 +453,64 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, User
 
 문제발생
 
-- 너무 많은 수정
+- 너무 많은 수정권한을 사용자에게 부여하게 된다
 
 
 
+#### [ 회원정보수정 Form Customizing ]
 
+###### 회원정보수정 Form 을 커스터마이징하여 사용자가 제한적으로 회원 정보를 수정하도록 한다
+
+- django 깃허브 들어가서 사용자로 하여금 수정이 가능하도록 할 회원정보에 대한 field를 설정할 수 있다.
+
+- django_form> accounts > forms.py
+
+```python
+from django import forms
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+
+class CustomUserChangeForm(UserChangeForm):
+
+    class Meta:
+        # User 클래스를 바로 사용하는 것이 아니라, 
+        # get_user_model() 을 사용해서  User 클래스를 참조한다
+        model = get_user_model()
+
+        # UserChangeForm -> User 클래스 -> AbstractUser 클래스
+        # Django 공식문서 : user-model
+        fields = ('email','last_name', 'first_name',)
+
+
+class CustomUserCreationForm(UserCreationForm):
+
+    class Meta:
+        model = get_user_model()
+        fields = ('username','password1','password2','email',)
+```
+
+- 새롭게 커스텀한 폼을 사용한다
+
+```python
+from .forms import CustomUserChangeForm
+```
+
+UserChangeForm import 한 것 제거
+
+비회원은 수정페이지에 들어가지 못하게 막아준다 `@login_required`
 
 
 
 ### 7. 비밀번호 변경
 
 ```python
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+```
 
+
+
+```python
+#비밀번호 수정
 def change_password(request):
     if request.method =='POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -479,23 +525,29 @@ def change_password(request):
 
 
 
-- 문제점 
+- 문제점 [ 자동으로 로그아웃 되어버린다? ]
   - 비밀번호 변경은 잘 되는데, 변경이 끝나면 로그인이 풀려버린다
   - 자동으로 로그아웃이 돼버린 이유는 비밀번호가 변경되면서 기존 세션과의 회원 인증 정보가 일치하지 않게 되었기 때문이다.
 
-##### update_session_auth_hash
+##### 자동 로그아웃 해제 update_session_auth_hash
 
-- `update_session_auth_hash(request, user)`
+###### 비밀번호 변경은 성공적으로 반영이 되지만, 변경이 끝나면 로그인이 풀려 자동으로 로그아웃됨
 
-  ```python
-  from django.contrib.auth import update_session_auth_hash
-  ```
+- 비밀번호가 변경되면서 기존 Session과 회원 인증정보가 불일치하기때문
+- `update_session_auth_hash(request, user)` 로 **해결**
 
+```python
+from django.contrib.auth import update_session_auth_hash
+```
 
+- 비밀번호를 수정한 뒤, 수정한 값을 바로 session에 update하기 때문에 로그인이 풀리지 않는다.
+- 
 
 ### 8. Auth Form 합치기
 
 - templates > accounts > auth_form.html
+  - 코드 재사용성을 높여보자
+-  account_form.html
 
 ```python
 {% extends 'base.html' %}
@@ -555,4 +607,3 @@ def change_password(request):
 ![1573458136024](assets/1573458136024.png)
 
 ![1573462649245](assets/1573462649245.png)
-
