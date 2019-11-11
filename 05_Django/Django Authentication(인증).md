@@ -62,10 +62,14 @@
   ```
 
 - `view.py`
+  
   - `form = UserCreationForm(request.POST)` :django에서 제공하는 회원가입 Form 을 가져온다
-  - `form.is_valid()`를 통해 유효성 검사를 수행한다
-
-- ```python
+  
+- `form.is_valid()`를 통해 유효성 검사를 수행한다
+  
+    
+  
+ ```python
 from django.shortcuts import render, redirect
   from django.contrib.auth.forms import UserCreationForm
   # Create your views here.
@@ -88,8 +92,8 @@ from django.shortcuts import render, redirect
       context = {'form':form,}
       return render(request, 'accounts/signup.html', context)
   
-  ```
-  
+ ```
+
 - `urls.py`
 
   ```python
@@ -136,11 +140,14 @@ from django.shortcuts import render, redirect
 ### 3. Login
 
 - 장고에서 로그인하는것은 session을 create하는 것과 같다.
+  	
+  	
   	- (장고는 session에 대한 매커니즘을 생각하지 않아도 쉽게 사용할 수 있다)
   	- session 사용자가 로그인을 하면, 사용자가 로그아웃을 하거나 정해진 일정한 시간이 지나기 전까지는 계속 유지됨	
 - User를 인증하는 ModelForm : `AuthenticationForm` 
-  - `AuthenticationForm(request, request.POST)`
-
+  
+- `AuthenticationForm(request, request.POST)`
+  
 - 로그인 하기
 
   - django에 내장된 login view 함수를 사용하기 위해 import 한다
