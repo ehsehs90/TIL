@@ -552,5 +552,7 @@ def change_password(request):
 
 - Python Shell
 
-![1573458136024](C:\Users\student\Desktop\TIL\05_Django\assets\1573458136024.png)
+![1573458136024](assets/1573458136024.png)
+
+![1573462649245](assets/1573462649245.png)
 
