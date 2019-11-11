@@ -165,25 +165,51 @@
 
 ###### Django에서 제공하는 Form 클래스를 이용해서 편리하게 폼 정보를 관리하고 유효성 검증을 진행하고, 비유효 field 에 대한 에러 메세지를 결정한다
 
-
-
 ###### 즉, HTML으로 Form 입력을 관리하던 것을 Django에서 제공하는 Form 클래스로 바꿔보는 작업을 해보자.
+
+
+
+#### 1.1 Form 장점
 
 - Form의 장점 ( -> 자동화 )
 
   - `blank=True` 와 같은 옵션을 따로 지정해주지 않으면, HTML 태그에 required  옵션 자동으로  붙여준다
   - 기존에 max_length와 같은 조건을 어길 경우 에러 페이지를 출력했는데, Django Form 을 써서 에러메세지를 출력해 준다
 
+  
+
+  
+
+- `Article Form Class`정의
+
+  - forms.py
+
+    ```python
+    from django import forms
+    
+    class ArticleForm(forms.Form):
+        title = forms.CharField(max_length=40)
+        content = forms.CharField()
+    ```
+
+- `views.py` 로직 변경
+
+  - 바인딩 과정 
+    - Form 인스턴스를 생성하고, 전달받은 데이터를 채운다
+    - 인스턴스에 데이터를 채워서, 유효성 검증을 진행한다
+      - **유효성 검증**
+        - 유효성 검증이 끝난 form 은 dict형태로 뽑혀나온다
+        - `cleaned_data`를 통해 dict안의 데이터를 검증한다
+      - Form 으로 전달받는 형태 2가지
+        - a. GET요청 : 비어있는 Form 전달
+        - b. 유효성 검증 실패 : 에러 메세지도 담겨서 Form 전달
+  - views.py
+
   ```python
-  # views.py
-  
-  
   def create(request):
       # POST 요청 -> 데이터를 받아서 DB에 저장
       if request.method == 'POST':
-          # Binding 과정
-          # 폼 인스턴스를 생성하고, 전달받은 데이터를 채운다.
-          # 인스턴스에 데이터를 채워서, 유효성 검증을 진행한다.
+  
           form = ArticleForm(request.POST)
           embed()
           if form.is_valid():
@@ -195,16 +221,50 @@
       else:
           form = ArticleForm()
   
-      # form으로 전달받는 형태가 2가지
-      # 1. GET요청 -> 비어있는 폼 전달
-      # 2. 유효성 검증 실패 -> 에러 메시지를 포함한 채로 폼 전달
+  
       context = {'form': form}
       return render(request, 'articles/create.html', context)
   ```
 
+  - create.html
+
+  ```html
+  {% block body %}
+  
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% comment %} 
+    {{form.as_p}}: 각각의 input 태그를 p 태그로 감싼다.
+    {{form.as_table}}: 각각의 input 태그를 테이블 태그로 감싼다.
+    {% endcomment %}
+    {{form.as_p}}
+    <input type="submit" value="작성"> <br>
+  </form>
+  
+  {% endblock  %}
+  ```
+
+  
+  
+  
+
+### [IPython]
+
+###### 실행 도중 원하는 위치에 shell을 실행할 수 있다
+
+###### Ipython을 이용해 Django Form유효성 검증 전/후 를 확인한다.
+
+- IPython 의 embed를 import 한다
+  
+    ```python
+    from IPython import embed
+  ```
+  
+  - Django Form 유효성 검증 전/후 확인
+  
   ```shell
   In [1]: form
-  Out[1]: <ArticleForm bound=True, valid=Unknown, fields=(title;content)>
+Out[1]: <ArticleForm bound=True, valid=Unknown, fields=(title;content)>
   
   In [2]: request.POST
   Out[2]: <QueryDict: {'csrfmiddlewaretoken': ['U1J7RiHKAesPTziSAwvboujPOKqSrouK01pu2DMCXZ6EgiSDLwjJehiLLhOMzHsl'], 'title': ['dfsdfsd'], 'content': ['sdfsdf']}>
@@ -229,22 +289,97 @@
   
   In [9]: exit()
   ```
+  
 
-  ```html
-  <form action ="" method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <input type ="submit"
-  </form>
+  
+### Django Form Customizing
+
+  ###### forms.py를 Customizing하여 다양한 형태의 Django Form을 구성할 수 있다.
+
+  - [ 1 ] forms.py
+
+    ```python
+    from django import forms
+    
+    class ArticleForm(forms.Form):
+        title = forms.CharField(
+            max_length=40, 
+            # HTML TAG 와 동일
+            label='제목',
+        )
+        content = forms.CharField()
+    ```
+
+    - ![1573460942793](C:\Users\student\Desktop\TIL\05_Django\assets\1573460942793.png)
+
+- [2]forms.py
+
+  ```python
+  from django import forms
+  
+  class ArticleForm(forms.Form):
+      title = forms.CharField(
+      	max_length=40,
+      	label='제목'
+      	widget=forms.TextInput(
+          	attrs={
+                  'class' : 'title',
+                  'placeholder': "제목을 입력해주세요",
+              }
+          )
+      )
+      content = forms.CharField()
   ```
 
-  #### get_object_or_404
+  - ![1573461065832](C:\Users\student\Desktop\TIL\05_Django\assets\1573461065832.png)
+
+- [ 3 ] forms.py
+
+  ```python
+  from django import forms
+  
+  class ArticleForm(forms.Form):
+      title = forms.CharField(
+          max_length=40, 
+          # HTML TAG 와 동일
+          label='제목',
+          widget=forms.TextInput(
+              attrs={
+                  'class' : 'title',
+                  'placeholder' : '제목을 입력해주세요~',
+              }
+          )
+      )
+      content = forms.CharField(
+          label='내용',
+          widget=forms.Textarea(
+              attrs={
+                  'class' : 'content',
+                  'placeholder' : '내용을 입력해주세욥',
+                  'rows' : 5,
+                  'cols' : 30,
+              }
+          )
+      )
+  ```
+
+  ​	-  ![1573461102759](C:\Users\student\Desktop\TIL\05_Django\assets\1573461102759.png)
+
+  #### get_object_or_404 ( NOT FOUND)
 
 - 500 에러는 내부 서버 오류로, '서버에 오류가 발생하여 요청을 처리할 수 없다'는 의미이다.  예를 들어 articles/410989 와같이 존재하지 않는 상세정보 페이지를 요청하면 500 에러가 발생한다
 
 - 하지만 이 경우엔 사용자의 요청이 잘못된 경우이기 때문에 '서버에 존재하지 않는 페이지에 대한  요청'이라는 의미를 가진 404 에러를 돌려주어야 한다.
 
-  - 500 에러를 돌려주면 " 깃 폭파했네요?" 라는 말이 나올거고, 404 에러를 돌려주면 "아, 선생님이 주소를 잘못 줬거나 내가 잘못 쳤구나"... 라는 말이 나올 것
+  - 500 에러를 돌려주면 " 깃 폭파했네요?" 라는 말이 나올거고,
+  
+    (서버의 잘못)
+  
+  -  404 에러를 돌려주면 "아, 선생님이 주소를 잘못 줬거나 내가 잘못 쳤구나"... 라는 말이 나올 것( 사용자의 부주의 )
+  
+  
+  
+- get_object_or_404 를 불러온다
 
 ```python
 # views.py
@@ -258,6 +393,8 @@ def detail(request, article_pk):
 
 ### DELETE
 
+- `views.py`
+
 ```python
 def delete(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
@@ -268,7 +405,41 @@ def delete(request, article_pk):
         return redirect('articles:detail', article.pk)
 ```
 
+- `detail.html`
+
+  - form 태그를 사용해 DELETE 버튼 생성
+
+  ```html
+  {% block body %}
+  
+  <p>제목  :  {{article.title}}</p>
+  <p>내용  :  {{article.content}}</p>
+  <p>최초 업로드 날짜  :  {{article.created_at}}</p>
+  <p>최종 수정 날짜  :  {{article.updated_at}}</p>
+  
+  <a href="{% url 'articles:index' %}">[INDEX]</a>
+  <a href="{% url 'articles:update' article.pk %}">[EDIT]</a>
+  <form action="{% url 'articles:delete' article.pk %}" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="[DELETE]"> <br>
+  </form>
+  
+  
+  {% endblock  %}
+  ```
+
+  
+
 ### UPDATE
+
+- `views.py`
+
+  - 2가지 Form  형식
+
+    a. GET요청 -> 초기값을 Form 에 넣어서 사용자에게 던져줌
+
+    b. POST -> is_valid가 False 가 리턴되었을때, 오류메세지를 포함해서 사용자에게 던져줌
 
 ```python
 def update(request, article_pk):
@@ -286,6 +457,8 @@ def update(request, article_pk):
     return render(request, 'articles/form.html', context)
 ```
 
+
+
 ## 3. Django ModelForm
 
 - 개념
@@ -296,18 +469,24 @@ def update(request, article_pk):
   2. 유효성 검증 : `is_valid()`
   3. 검증 통과한 값 딕셔너리로 제공 : `cleaned_data`
 
+######    DJango Model Form
+
+1. Model Form 클래스를 상속받아 사용한다
+2. 메타 데이터로 Model정보를 건네주면, ModelForm이 자동으로 field에 맞춰 input을 생성해준다
+   - 메타데이터
+     - 데이터의 데이터
+       - 사진 한장 -> 촬영장비, 이름 환경 등... 사진에 대한 데이터
+
 
 
 - `Form` vs `ModelForm`
 
   ```python
-  #forms. py
+  #forms.py
   class ArticleForm(forms.Form):
   	title = forms.CharField
       content = forms.CharField
   
-  
-      
   #Django ModelForm
   #Django 가 건네받은 모델을 기준으로 폼 양식에 필요한 대부분을 전부 만들어준다.
   
@@ -318,7 +497,7 @@ def update(request, article_pk):
               model=Article
               fields='__all__'
   ```
-
+  
 - 전체코드
 
 ```python

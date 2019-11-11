@@ -409,15 +409,59 @@ def login(request):
 
 
 
+- 이미 로그인이 되어있기 때문에 request에 이미 로그인하고 있는 사람의 session, user정보가 들어가 있다.
+
+   - `delete()` 만 해주면 끝
+     	- 지금 접속하고 있는 user 삭제
+
+  ```python
+  @require_POST
+  def delete(request):
+      request.user.delete()
+      return redirect('articles:index')
+  ```
+
+  
+
+### 6. 회원정보 수정
+
+- Django에서 제공하는 회원 정보 수정 폼 (UserChangeForm)을 가져다 사용한다.
+
+```python
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
+```
+
+- 회원정보 폼에는 user 의 정보가 들어가 있어야 한다
+
+  - instance로 request.user를 통해 사용자의 정보를 가져온다
+
+  ```python
+  # 회원정보 수정
+  
+  def update(request):
+      if request.method =="POST":
+          pass
+      else:
+          #회원정보 폼에는 user의 정보가 들어가 있어야 한다.
+          #instance로 request.user를 통해 사용자의 정보를 가져온다.
+          form = UserChangeForm(instance=request.user)
+     context ={
+         'form' : form
+     }
+  	return render(request, 'accounts/update.html', context)
+  ```
+
+문제발생
+
+- 너무 많은 수정
 
 
 
 
 
 
-## 7. 비밀번호 변경
 
-
+### 7. 비밀번호 변경
 
 ```python
 
@@ -447,4 +491,66 @@ def change_password(request):
   from django.contrib.auth import update_session_auth_hash
   ```
 
-  
+
+
+### 8. Auth Form 합치기
+
+- templates > accounts > auth_form.html
+
+```python
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block body %}
+
+{% if request.resolver_match.url_name == 'signup' %}
+  <h1>회원가입</h1>
+{% elif request.resolver_match.url_name == 'login' %}
+  <h1>로그인</h1>
+{% elif request.resolver_match.url_name == 'update' %}
+  <h1>회원정보수정</h1> 
+{% else %}
+  <h1>비밀번호　변경</h1>
+{% endif %}
+  <h1> 회원가입 </h1>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  {% buttons submit='제출' reset='초기화' %}
+  {% endbuttons %}
+  {% comment %} <input type="submit" value="가입" {% endcomment %} 
+</form> 
+{% endblock %}
+```
+
+- 나머지 내용 같은 html 삭제
+
+
+
+### 9. Gravatar - 프로필 이미지 만들기
+
+- 이메일을 활용해서 프로필 사진을 만들어주는 서비스
+
+- 한번 등록하면, 이를 지원하는 사이트에서는 모두 해당 프로필 이미지를 사용할 수 있다.
+
+- 이메일 체크
+
+  - `https://ko.gravatar.com/site/check/`
+
+  - 이메일 주소를 해시(MD5) 로 바꾸고 URL으로 접속하면 이미지가 뜬다
+
+    (`?s=80`으로 사이즈 조절 가능 )
+
+- **Python으로 Hash 만들기**
+
+   - md5 hash 생성 
+     - `import hashlib`
+
+  - 혹시 모를 공백, 대문자 등을 방지하기 위한 파이썬 문법들
+    - `.strip()`, `lower()`
+
+- Python Shell
+
+![1573458136024](C:\Users\student\Desktop\TIL\05_Django\assets\1573458136024.png)
+
