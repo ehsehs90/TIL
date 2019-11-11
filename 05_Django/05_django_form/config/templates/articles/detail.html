@@ -19,7 +19,7 @@
 
 
 <a href="/articles/index" class="btn btn-warning" style="display:inline">[back]</a>
-<a href="{% url 'accounts:update' article.pk %}"  class="btn btn-warning" style="display:inline"> [edit]</a>
+<a href="{% url 'articles:update' article.pk %}"  class="btn btn-warning" style="display:inline"> [edit]</a>
 {% comment %} <a href="/articles/{{article.pk}}/delete">[delete]</a> {% endcomment %}
 <br>
 {% comment %} <form action="/articles/{{article.pk}}/delete/" method="POST">

@@ -3,6 +3,7 @@
 
 {% block body %}
 
+<!-- e다섯개를 합쳤-->
 {% if request.resolver_match.url_name == 'signup' %}
   <h1>회원가입</h1>
 {% elif request.resolver_match.url_name == 'login' %}
@@ -12,7 +13,6 @@
 {% else %}
   <h1>비밀번호　변경</h1>
 {% endif %}
-  <h1> 회원가입 </h1>
 
 <form action="" method="POST">
   {% csrf_token %}

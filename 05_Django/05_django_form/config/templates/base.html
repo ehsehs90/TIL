@@ -22,7 +22,7 @@
     <img src="https://s.gravatar.com/avatar/{{ user.email|makemd5 }}?s=80&d=mp" alt="">
     어서오세요, {{user.username}}</h2>
     <a href ="{% url 'accounts:logout' %}" class="btn btn-warning text-light" style="display:inline">로그아웃</a>
-    <a href="{% url 'accounts:update' %}" class = "btn btn-warning text-light" style="display:inline">정보수정</a>
+    <a href="{% url 'accounts:update'  %}" class = "btn btn-warning text-light" style="display:inline">정보수정</a>
     <form action ="{% url 'accounts:delete' %}" method="POST" style="display:inline">
     {% csrf_token %}
     <input type="submit" value="회원탈퇴" class="btn btn-danger" style="display:inline">
