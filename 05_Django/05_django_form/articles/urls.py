@@ -18,5 +18,5 @@ urlpatterns = [
     path('<int:article_pk>/', views.detail ,name ='detail'), #READ Logic - Index   
     path('index/', views.index ,name ='index'), #READ Logic - Index
     path('create/', views.create, name='create')
-
+   
 ]

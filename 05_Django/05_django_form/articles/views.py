@@ -1,3 +1,5 @@
+import hashlib
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article, Comment
@@ -7,11 +9,18 @@ from .forms import ArticleForm, CommentForm
 # Create your views here.
 
 def index(request):
-    articles = Article.objects.all()[::-1]
-    context =  {'articles': articles,}
-    return render(request, 'articles/index.html', context)
-   
+    if request.user.is_authenticated:
+        gravatar_url = hashlib.md5(request.user.email.encode('utf-8').lower().strip()).hexdigest()
+    else:
+        gravatar_url = None
 
+    articles = Article.objects.all()[::-1]
+    context =  {'articles': articles,'gravatar_url':gravatar_url,}
+    return render(request, 'articles/index.html', context)
+
+
+#로그인 안한상태로 create 로직에 접근하면 접근 못하게 하기
+@login_required
 def create(request):
     if request.method =='POST':
         # Binding 과정
@@ -52,14 +61,16 @@ def detail(request, article_pk):
                  }
     return render(request,'articles/detail.html',context)
 
-
+# @login_required
+# 이렇게 쓰게 될 경우 get요청으로 가기 떄문에 405 에러 발생 ! 따라서 함수로직 안에 넣어준다
 @require_POST
 def delete(request, article_pk):    
-    article = Article.objects.get(pk=article_pk)    
-    article.delete()    
+    if request.user.is_authenticated:
+        article = Article.objects.get(pk=article_pk)    
+        article.delete()    
     return redirect('/articles/index/')
 
-
+@login_required
 def update(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     if request.method =='POST':
@@ -106,17 +117,17 @@ def update(request, article_pk):
 @require_POST
 def comments_create(request, article_pk):
     article = get_object_or_404(Article, pk = article_pk)
-    
-    comment_form = CommentForm(request.POST)
-    if comment_form.is_valid():
-            # save 메서드 -> 선택인자 : (기본값) commit =True
-            # DB에 바로 저장되는것을 막아준다
-        comment = comment_form.save(commit=False)
-            # 여기까지 객체는 만들어졌지만 DB에는 반영이 안된 상태
-            # form에서 메다데이터를 article 까지 보이게하면 사용자가 게시글을 선택해 댓글을 담기는 이상한 상황이 발생한다
-            # 따라서 article 은 view함수 내에서 처리하도록 한다  (아래코드)
-        comment.article =article
-        comment.save()
+    if request.user.is_authenticated:
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+                # save 메서드 -> 선택인자 : (기본값) commit =True
+                # DB에 바로 저장되는것을 막아준다
+            comment = comment_form.save(commit=False)
+                # 여기까지 객체는 만들어졌지만 DB에는 반영이 안된 상태
+                # form에서 메다데이터를 article 까지 보이게하면 사용자가 게시글을 선택해 댓글을 담기는 이상한 상황이 발생한다
+                # 따라서 article 은 view함수 내에서 처리하도록 한다  (아래코드)
+            comment.article =article
+            comment.save()
         return redirect('articles:detail', article.pk)
     
 
@@ -135,8 +146,9 @@ def comments_delete(request, article_pk, comment_pk):
     # 일단 comment_pk 가 있어야 db에서 삭제가됨.
     # 그럼 article_pk 는 필요할까..? 네
     # 삭제 로직 끝난 후 detail.html 로  redirect 하려면 article_pk 필요하니까
-    article = get_object_or_404(Article, pk = article_pk)   
-    comment = article.comment_set.get(pk=comment_pk)
-    comment.delete()
+    if request.user.is_authenticated:
+        article = get_object_or_404(Article, pk = article_pk)   
+        comment = article.comment_set.get(pk=comment_pk)
+        comment.delete()
     return redirect('articles:detail', article_pk)
       

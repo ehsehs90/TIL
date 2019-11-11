@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load bootstrap4 %}
+
 
 {% block body %}
 <h1 class="text-center">DETAIL</h1>
@@ -7,28 +9,39 @@
 <p>생성 시각 : {{article.created_at}}</p>
 <p>수정 시각 : {{article.updated_at}}</p>
 <hr>
-<a href="/articles/index">[back]</a>
-<a href="{% url 'articles:update' article.pk %}"> [edit]</a>
-{% comment %} <a href="/articles/{{article.pk}}/delete">[delete]</a> {% endcomment %}
-<form action="/articles/{{article.pk}}/delete/" method="POST">
-  {% csrf_token %}
-  <input type="submit">
+
+    
+
+<form action ="{% url 'articles:delete' article.pk %}" method="POST" style="display:inline">
+{% csrf_token %}
+<input type="submit" value="게시글 삭제"  class="btn btn-danger" style="display:inline">
 </form>
 
+
+<a href="/articles/index" class="btn btn-warning" style="display:inline">[back]</a>
+<a href="{% url 'accounts:update' article.pk %}"  class="btn btn-warning" style="display:inline"> [edit]</a>
+{% comment %} <a href="/articles/{{article.pk}}/delete">[delete]</a> {% endcomment %}
+<br>
+{% comment %} <form action="/articles/{{article.pk}}/delete/" method="POST">
+  {% csrf_token %}
+  <input type="submit" value ="댓글 삭제"  class="btn btn-danger" style="display:inline">
+</form> {% endcomment %}
+<hr>
+<br>
 <form action="{% url 'articles:comments_create' article.pk %}" method="POST">
   {{ comment_form }}
   {% csrf_token %}.
   <input type="submit" value="댓글작성">
 </form>
-<hr>
+<br>
 <div class="text-center">
   <p><b>댓글목록({{ comments|length}})개</b></p>
   {% for comment in comments %}
   <p>[{{forloop.revcounter}}]번 댓글 {{comment.content}}</p>
 
-  <form action="{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST" style="display:inline;">
+  <form action="{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST" style="display:inline">
     {% csrf_token %}
-    <input type="submit" value="댓글삭제" name="comment">
+    <input type="submit" value="댓글삭제" name="comment"  class="btn btn-danger" style="display:inline">
   </form>
   {% endfor %}
 </div>
