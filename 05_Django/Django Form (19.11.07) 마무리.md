@@ -4,34 +4,81 @@
 
 - CREATE 로직과 UPDATE 로직이 같은 form.html을 공유하고 있는데, 둘 다 <h1>CREATE</h1> 라는 헤더가 출력되고 있다
 
-- URL Resolver 는 사용자가 요청한 URL과 장고 내부로 들어오는 URL 사이에서 번역 역할을 해준다
+  - `URL Resolver`을 적용해 이를 해결해보자!
 
-  ```python
+- URL Resolver 는 사용자가 요청한 URL과 장고 내부로 들어오는 URL 사이에서 번역 역할을 해준다.
+
+  - `request.resolver_match.url_name == 'create'` : request로 들어오는 url 의 이름이 'create'인지 확인
+  
+    - `urls.py`에 등록된 url의 이름을 작성한다
+    
+      ```javascript
+      {% block body %}
+      {% if request.resolver_match.url_name == 'create' %}
+      <h1 class ='text-center'>CREATE</h1>
+      {% else %}
+      <h1 class = "text-center">UPDATE</h1>
+      {% endif %}
+      
+      {% if request.resolver_match.url_name == 'create' %}
+      <a href={% url 'articles:index ' %}>[INDEX]</a>
+      {% else %}
+      < a href = {% url 'articles:detail' article.pk %}[DETAIL]</a>
+    {% endif %}
+      {% endblock %}
+      ```
+    ```
+    
+    ```
+    
+  - form.html
+  
+  ```html
+  {% extends 'base.html' %}
+  {% load bootstrap4 %}
   {% block body %}
+  
   {% if request.resolver_match.url_name == 'create' %}
-  <h1 class="text-center">CREATE </h1>
+  <h1 class="text-center">CREATE</h1>
   {% else %}
-  <h1 class="text-center"> UPDATE </h1>
+  <h1 class="text-center">UPDATE</h1>
   {% endif %}
-  <hr>
   
   <hr>
-  {% if request.resolver_match.url_name == 'create' %} <a href="{% url 'articles:index' %}">[BACK]</a> 
+  <div class="container mx-auto">
+    <form action="" method="POST" class="mx-auto" style="max-width:500px;">
+      {% csrf_token %}
+      <div class="text-center">
+        {% bootstrap_form form layout="inline" %}
+        {% buttons submit='제출' reset='초기화' %}
+        {% endbuttons %}
+        {% comment %} <input type="submit" value="작성"> <br> {% endcomment %}
+      </div>
+    </form>
+  </div>
+  
+  {% if request.resolver_match.url_name == 'create' %}
+  <a href="{% url 'articles:index' %}">[BACK : INDEX]</a>
   {% else %}
-  <a href="{% url 'articles:detail'  article.pk %}">[BACK]
+  <a href="{% url 'articles:detail' article.pk %}">[BACK : DETAIL]</a>
   {% endif %}
-  {% endblock %}
+  
+  {% endblock  %}
   ```
-
+  
   
 
 ### 2. Django BootStrap
+
+- django-bootstrap4 설치
 
 ```shell
 $ pip install django-bootstrap4
 ```
 
 - 출생신고 app등록
+
+  - settings.py
 
   ```python
   INSTALLED_APPS = [
@@ -41,7 +88,9 @@ $ pip install django-bootstrap4
   ]
   ```
 
-- `bootstrap4` 을 load한다
+- `bootstrap4` 을 load한다 
+  
+  - bootstrap 을 적용할 템플릿에 반드시 `{% load bootstrap4 %}` 를 적용해야한다.
   - `<https://django-bootstrap4.readthedocs.io/en/latest/quickstart.html>` 을 참고
 
 ```html
@@ -59,33 +108,33 @@ $ pip install django-bootstrap4
 
 ### 3. Comment - ModelForm
 
- - Comment 모델 생성
+#### 1. Comment 모델 생성
 
-   ```python
-   class Comment(models.Model):
-       article = models.ForeignKey(Article, on_delete=models.CASCADE)
-       content = models.TextField()
-       created_at  =models.DateTimeField(auto_now_add=True)
-       updated_at = models.DateTimeField(auto_now=True)
-   
-       
-       # Model Level에서 Metadata 설정
-       class Meta:
-           ordering = ['-pk',]
-   
-       def __str(self):
-           return self.content
-   ```
+```python
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at  =models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-   - makemigrations 와 migrate
+    
+    # Model Level에서 Metadata 설정
+    class Meta:
+        ordering = ['-pk',]
 
-     ```shell
-     $ python manage.py makemigrations
-     $ python manage.py migrate
-     $ python manage.py showmigrations(?)
-     ```
+    def __str(self):
+        return self.content
+```
 
- - Comment ModelForm 생성
+- makemigrations 와 migrate
+
+  ```shell
+  $ python manage.py makemigrations
+  $ python manage.py migrate
+  $ python manage.py showmigrations(?)
+  ```
+
+#### 2. Comment ModelForm 생성
 
 ```python
 class CommentForm(forms.ModelForm):   
@@ -132,7 +181,8 @@ def comments_create(request, article_pk):
 
 ```
 
- - `admin.py` 등록
+#### 3. `admin.py` 등록   
+
 
    ```python
    from django.contrib import admin
@@ -168,19 +218,6 @@ def comments_create(request, article_pk):
 
    
 
- - `detail.html`
-
-   ```
-   
-   ```
-
-   
-
-
-
-
-
-
 
 
 
@@ -193,13 +230,25 @@ def comments_create(request, article_pk):
 #### 4.1  require_POST
 
 - view함수가 POST 메서드 요청만 승인하도록 하는 데코레이터
+
 - 일치하지 않는 요청이면 405 Method Not Allowed 에러 발생시킴
+
+- require_POST import 하기
+
+  ```python
+  from django.views.decorators.http import require_POST
+  ```
+
+
+
+#### 4.2 require_POST 사용하기
+
 - `views.py`
-  - @require_POST 는 **POST요청만 수행하는 뷰함수**에 쓴다
+  - @require_POST 는 **POST요청만 수행하는 뷰 함수**에 쓴다
   - 이걸 사용하면 POST여부를 확인하는 코드는 필요없어진다 
 
 ```python
-from django.views.decorators.http import require_POS
+from django.views.decorators.http import require_POST
 
 
 @require_POST
