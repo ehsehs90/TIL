@@ -14,7 +14,8 @@ def new(request):
     return render(request, 'movies/new.html')
 
 
-def create(reqeust):
+
+def create(reqeust):    
     title = reqeust.POST.get('title')
     title_en = reqeust.POST.get('title_en')
     audience = reqeust.POST.get('audience')
@@ -82,6 +83,7 @@ def comment_create(request, movie_pk):
         comment = Comment()
         comment.content=request.POST.get('content')
         comment.title = movie
+        comment.user= request.user
         comment.save()
 
         return redirect(f'/movies/{movie.pk}/',movie_pk)
@@ -89,12 +91,12 @@ def comment_create(request, movie_pk):
         return redirect('/movies/detail/.html',movie_pk)
 
 
-def comment_delete(request, movie_pk,comment_pk):
-
+def comments_delete(request, movie_pk,comment_pk):
+    movie = Movie.objects.get(pk=movie_pk)
     if request.method =="POST":
         comment=Comment.objects.get(pk=comment_pk)
         comment.delete()
         return redirect(f'/movies/{movie.pk}/',movie_pk)
     else:
-        return redirect('/movies/detail/.html',movie_pk)
+        return redirect('/movies/detail.html',movie_pk)
        

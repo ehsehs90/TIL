@@ -13,6 +13,6 @@ urlpatterns = [
     path('new/', views.new, name='new'),
     path('index/', views.index, name='index'),
     path('<int:movie_pk>/comments/', views.comment_create, name='comment_create'),
-    path('<int:movie_pk>/comments/<int:comment_pk>/' ,views.comment_delete, name='comment_delete'),
+    path('<int:movie_pk>/comments/<int:comment_pk>/' ,views.comments_delete, name='comments_delete'),
   
 ]

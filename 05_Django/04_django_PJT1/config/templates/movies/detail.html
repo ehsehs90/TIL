@@ -38,8 +38,10 @@
 {% comment %} {% for movie in movies %} {% endcomment %}
 
 {% for comment in comments %}
-<li>{{comment.pk}}] {{comment.content}}
-<form action = "/movies/{{movie.pk}}/comments/{{comment_pk}}" method ="POST">
+<li>{{comment.pk}}]{{comment.user}} {{comment.content}}
+
+
+<form action = "{% url 'movies:comments_delete' movie.pk comment.pk %}" method ="POST">
 {% csrf_token %}
 <input type= "submit" value="댓글삭제" name="comment">
 </form>

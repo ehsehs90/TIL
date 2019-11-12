@@ -142,6 +142,7 @@ from django.shortcuts import render, redirect
 - 장고에서 로그인하는것은 session을 create하는 것과 같다.	
   
 - (장고는 session에 대한 매커니즘을 생각하지 않아도 쉽게 사용할 수 있다)
+  	
   	- session 사용자가 로그인을 하면, 사용자가 로그아웃을 하거나 정해진 일정한 시간이 지나기 전까지는 계속 유지됨	
 - User를 인증하는 ModelForm : `AuthenticationForm` 
   
@@ -547,7 +548,8 @@ from django.contrib.auth import update_session_auth_hash
 ```
 
 - 비밀번호를 수정한 뒤, 수정한 값을 바로 session에 update하기 때문에 로그인이 풀리지 않는다.
-- 
+
+  
 
 ### 8. Auth Form 합치기
 

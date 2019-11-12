@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block body %}
+
+<h1 class="text-center"> UPDATE </h1>
+
+<hr>
+
+<form action="" method="POST" class="mx-auto">
+  {% csrf_token %}
+  {% bootstrap_form form layout='inline' %}
+
+  <div class="text-center">
+    {% buttons submit='제출' reset='초기화' %}
+    {% endbuttons %}
+  </div>
+</form>
+{% endblock %}
+<hr>
