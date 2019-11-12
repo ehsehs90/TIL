@@ -8,10 +8,12 @@
 <a href = "{% url 'articles:create' %}" > [new] </a>
 <hr>
 {% for article in articles %}
-<p>[{{article.pk}}] {{article.title}} </p>
-
-<a href="/articles/{{article.pk}}/"  class="btn btn-danger" style="display:inline">[DETAIL]</a>
-
+<br>
+<p> 작성자 {{article.user}}</p>
+<p style="display:inline">[{{article.pk}}] {{article.title}}  </p style="display:inline">
+<a href="/articles/{{article.pk}}/"  class="btn btn-primary" style="display:inline">[DETAIL]</a>
+<br>
+<hr>
 
 {% endfor %}
 

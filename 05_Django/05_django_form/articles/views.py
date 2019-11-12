@@ -29,7 +29,9 @@ def create(request):
         form = ArticleForm(request.POST)
         
         if form.is_valid(): #form이 유효성 검증을 마치면 dic 형태로 바뀐다
-            article =form.save() 
+            article = form.save(commit=False)
+            article.user = request.user
+            article.save() 
             #모델 폼을 쓰면 로직이 간단해진다.
             # cleaned_data 를 통해 딕셔너리 안 데이터를 검증한다
             # title = form.cleaned_data.get('title')
@@ -64,26 +66,37 @@ def detail(request, article_pk):
 # @login_required
 # 이렇게 쓰게 될 경우 get요청으로 가기 떄문에 405 에러 발생 ! 따라서 함수로직 안에 넣어준다
 @require_POST
-def delete(request, article_pk):    
+def delete(request, article_pk): 
+    # 지금 사용자가 로그인 되어 있는지 ?
     if request.user.is_authenticated:
-        article = Article.objects.get(pk=article_pk)    
-        article.delete()    
+        #삭제할 게시글 가져오기
+        article = Article.objects.get(pk=article_pk)
+        # 지금 로그인한 사용자와 게시글 작성자 비교
+        if request.user == article.user:  
+            article.delete()
+        else:
+            return redirect('articles:detail', article.pk)
+
     return redirect('/articles/index/')
 
 @login_required
 def update(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
-    if request.method =='POST':
-        form = ArticleForm(request.POST, instance=article)
-        #유효성검사
-        if form.is_valid():
-            article = form.save()
-            # article.title = form.cleaned_data.get('title')
-            # article.content = form.cleaned_data.get('content')
-            # article.save()
-            return redirect('articles:detail',article.pk)    
+    if request.user == article.user:
+        if request.method =='POST':
+            form = ArticleForm(request.POST, instance=article)
+            #유효성검사
+            if form.is_valid():
+                article = form.save()
+                # article.title = form.cleaned_data.get('title')
+                # article.content = form.cleaned_data.get('content')
+                # article.save()
+                return redirect('articles:detail',article.pk)    
+        else:
+
+            form = ArticleForm(instance=article)
     else:
-        form = ArticleForm(instance=article)
+        return redirect('articles:index')
        
         # form = ArticleForm(initial={
         #     'title' : article.title,
@@ -104,6 +117,7 @@ def update(request, article_pk):
 #         comment_form = CommentForm(request.POST)
 #         if comment_form.is_valid():
 #             # save 메서드 -> 선택인자 : (기본값) commit =True
+
 #             # DB에 바로 저장되는것을 막아준다
 #             comment = comment_form.save(commit=False)
 #             # 여기까지 객체는 만들어졌지만 DB에는 반영이 안된 상태
@@ -127,8 +141,11 @@ def comments_create(request, article_pk):
                 # form에서 메다데이터를 article 까지 보이게하면 사용자가 게시글을 선택해 댓글을 담기는 이상한 상황이 발생한다
                 # 따라서 article 은 view함수 내에서 처리하도록 한다  (아래코드)
             comment.article =article
+            comment.user= request.user # 현재 접속중인 user를 request로 정보를 받아 댓글 user로 넣겠다
+            # comment.user = article.user # 이건 게시글을 작성한 user 정보를 댓글 user로 넣겠다는 뜻
+            comment.article_id = article_pk # 이렇게 로직을 바꿀거면. 이 아니라 _(언더스코어)
             comment.save()
-        return redirect('articles:detail', article.pk)
+        return redirect('articles:detail', article_pk)
     
 
 # def comments_delete(request, article_pk, comment_pk):
@@ -146,9 +163,12 @@ def comments_delete(request, article_pk, comment_pk):
     # 일단 comment_pk 가 있어야 db에서 삭제가됨.
     # 그럼 article_pk 는 필요할까..? 네
     # 삭제 로직 끝난 후 detail.html 로  redirect 하려면 article_pk 필요하니까
+    # 1.로그인 여부 확인
     if request.user.is_authenticated:
-        article = get_object_or_404(Article, pk = article_pk)   
+        article = get_object_or_404(Article, pk = article_pk) 
         comment = article.comment_set.get(pk=comment_pk)
-        comment.delete()
+        # 2.로그인 한 사용자와댓글 작성자가 같을 경우
+        if request.user == comment.user:  
+            comment.delete()
     return redirect('articles:detail', article_pk)
       

@@ -136,11 +136,13 @@ from django.shortcuts import render, redirect
 ### 3. Login
 
 - 장고에서 로그인하는것은 session을 create하는 것과 같다.
+  	
   	- (장고는 session에 대한 매커니즘을 생각하지 않아도 쉽게 사용할 수 있다)
   	- session 사용자가 로그인을 하면, 사용자가 로그아웃을 하거나 정해진 일정한 시간이 지나기 전까지는 계속 유지됨	
 - User를 인증하는 ModelForm : `AuthenticationForm` 
-  - `AuthenticationForm(request, request.POST)`
-
+  
+- `AuthenticationForm(request, request.POST)`
+  
 - 로그인 하기
 
   - django에 내장된 login view 함수를 사용하기 위해 import 한다
@@ -188,7 +190,7 @@ from django.shortcuts import render, redirect
       if request.method =='POST':
           # 세션 관련된 정보를 받기 위해 request를 받는다
           form = AuthenticationForm(request, request.POST)
-          if form.is_valid():
+          if form.is_valid(): #?
               auth_login(request, form.get_user())
               return redirect('articles:index')
       else:
