@@ -1,13 +1,12 @@
 # 1. Many To One
 
-**쿼리실습**
+## Many To One
 
-- manytoone APP 실행, 앱등록
-  ```shell
-  $ python manage.py startapp manytoone
-  ```
+```shell
+$ python manage.py startapp manytoone
+```
 
-- 실습을 위한 User, Article, Comment 정의  
+- 실습을 위한 User, Article, Comment 정의
 
   ```python
   from django.db import models
@@ -35,177 +34,231 @@
           return f'{self.content}'
   ```
 
-  
+- 현재User와 Article의 관계는 User : Article = 1 : N이다.
+  - **[참조]** `article.user`
+  - **[역참조]** `user.article_set`
 
-- django-extension APP 등록
+- 관점을 조금 바꿔,
 
-- ```shell
-  $ python manage.py shell_plus 
+   
+
+  ```
+  User : Article = M : N
   ```
 
-- 현재 User 와 Article의 관계는 User : Article = 1 : N 이다.
+   
 
-  - [참조] `article.user`
-  - [역참조] `user.article_set`
+  으로 설정해보자. User와 Article의 관계에서 서로 좋아요를 표현할 수 있다고 생각해보자.
 
-- 관점을 조금 바꿔, `User : Article = M : N ` 으로 설정해보자. User와 Article의 관계에서  서로 좋아요를 표현할 수 있다고 생각해보자
+  - User는 여러 개의 게시글에 Like (좋아요)를 할 수 있다
+  - Article은 여러 명의 User로부터 Like (좋아요)를 받을 수 있다.
 
-  - User 는 여러 개의 게시글에 Like (좋아요) 할 수 있다.
-  - Article은 여러명의 User로부터 Like(좋아요)를 받을 수 있다.
+### [ 실습 ]
 
+**실습 데이터**
 
+```shell
+user1 = User.objects.create(name='Kim')
+user2 = User.objects.create(name='Lee')
+article1 = Article.objects.create(title='1글', user=user1)
+article2 = Article.objects.create(title='2글', user=user1)
+article3 = Article.objects.create(title='3글', user=user2)
+c1 = Comment.objects.create(content='1글1댓글', user=user1, article=article1)
+c2 = Comment.objects.create(content='1글2댓글', user=user2, article=article1)
+c3 = Comment.objects.create(content='1글3댓글', user=user1, article=article1)
+c4 = Comment.objects.create(content='1글4댓글', user=user2, article=article1)
+c5 = Comment.objects.create(content='2글1댓글', user=user1, article=article2)
+c6 = Comment.objects.create(content='!1글5댓글', user=user2, article=article1)
+c7 = Comment.objects.create(content='!2글2댓글', user=user2, article=article2)
+```
 
-[실습]
+**ORM이 자동으로 DB에 요청해서 결과를 가져온다.**
 
-- 정보입력
+- 결과 데이터가 유일한 값 : **get**
+- 결과 데이터가 하나도 없을 수 있는 경우 : **filter**
 
-- ```shell
-  user1 = User.objects.create(name='Kim')
-  user2 = User.objects.create(name='Lee')
-  article1 = Article.objects.create(title='1글', user=user1)
-  article2 = Article.objects.create(title='2글', user=user1)
-  article3 = Article.objects.create(title='3글', user=user2)
-  c1 = Comment.objects.create(content='1글1댓글', user=user1, article=article1)
-  c2 = Comment.objects.create(content='1글2댓글', user=user2, article=article1)
-  c3 = Comment.objects.create(content='1글3댓글', user=user1, article=article1)
-  c4 = Comment.objects.create(content='1글4댓글', user=user2, article=article1)
-  c5 = Comment.objects.create(content='2글1댓글', user=user1, article=article2)
-  c6 = Comment.objects.create(content='!1글5댓글', user=user2, article=article1)
-  c7 = Comment.objects.create(content='!2글2댓글', user=user2, article=article2)
+#### 문제1
+
+- 1번 사람이 작성한 게시글을 다 가져오기
+
+  ```shell
+  In [15]: my_article = user1.article_set.all()
+  
+  In [16]: my_article
+  Out[16]: <QuerySet [<Article: 1글>, <Article: 2글>]>
   ```
 
+####  문제2
+
+- 1번 사람이 작성한 모든 게시글에 달린 댓글 가져오기
+
+  ```shell
+  In [21]: for article in user1.article_set.all():
+      ...:     print(article.comment_set.all())
+      ...: 
+  <QuerySet [<Comment: 1글1댓글>, <Commet: 1글2댓글>, <Comment: 1
+  글3댓글>, <Comment: 1글4댓글>, <Comment: !1글5댓글>]>
+  <QuerySet [<Comment: 2글1댓글>, <Comment: !2글2댓글>]>
   
-
-  ORM 이 자동으로 DB에 요청해서 결과를 가져온다
-
-  	- 결과 데이터가 유일한 값 : **get**
-  	- 결과 데이터가 하나도 없을 수 있는 경우 : **filter**
-
+  In [22]: for article in user1.article_set.all():
+      ...:     print(article.comment_set.all())
+      ...: 
+  <QuerySet [<Comment: 1글1댓글>, <Comment: 1글2댓글>, <Comment: 1글3댓글>, <Comment: 1글4댓글>, <Comment: !1글5댓글>]>
+  <QuerySet [<Comment: 2글1댓글>, <Comment: !2글2댓글>]>
   
-
-  1. 1번사람이 작성한 게시글을 다 가져오면?
-
-     ```shell
-   $ user1.article_set.all()
-     ```
-
-  2. 1번 사람이 작성한 모든 게시글에 달린 댓글 가져오기
-
-     ```shell
-   In[2]: for article in user1.article_set.all()
-     	   		for comment in article.comment_set.all()
-  	 				print(comment.content)
-     				
-     Out[2]: 1글1댓글
-           1글2댓글
-           1글3댓글
-           1글4댓글
-           !1글5댓글
-           2글1댓글
-           !2글2댓글      
-     ```
-  ```
-     
-  3.  2번 댓글을 작성한  User는?
+  In [23]: 
   
-   ```shell
-           In [] : c2.user
-         Out[] : <User: Lee>
-           
-         In [] : c2.user.pk
-           Out[] : 2
+  In [23]: for article in user1.article_set.all():
+      ...:     for comment in article.comment_set.all():
+      ...:         print(comment.content)
+      ...: 
+      ...: 
+  1글1댓글
+  1글2댓글
+  1글3댓글
+  1글4댓글
+  !1글5댓글
+  2글1댓글
+  !2글2댓글
   ```
 
-  4. 2번 댓글을 작성한 User의 이름은?
+####  문제3
 
-     ```shell
-     $ c2.user.name
-     ```
-   ```
+- 2번 댓글을 작성한 User
+
+  ```shell
+  In [24]: c2.user.pk
+  Out[24]: 8
+  ```
+
+####  문제4
+
+- 2번 댓글을 작성한 User의 이름
+
+  ```shell
+  In [25]: c2.user.name
+  Out[25]: 'Lee'
+  ```
+
+####  문제5
+
+- 2번 댓글을 작성한 사람의 모든 게시글
+
+  ```shell
+  # 1개만 반환
+  In [28]: Article.objects.get(user=c2.user.pk)
+  Out[28]: <Article: 3글>
   
-   ```
+  # 있는 만큼 반환
+  In [29]: c2.user.article_set.all()
+  Out[29]: <QuerySet [<Article: 3글>]>
+  ```
 
-5.  2번 댓글을 작성한 사람의 모든 게시글은?
-  
-   ```python
-     In[14]: c2.user.article_set.all()
-     Out[14]: <QuerySet [<Article: 3글>]>
-   ```
+####  문제6
 
-  6.  1번 글의 첫번째 댓글을 작성한 사람의 이름은?
+- 1번 글의 첫번째 댓글을 작성한 사람의 이름
 
-     ```shell
-      In []: article1.comment_set.all()[0].user.name
-     Out[]: 'Kim'
-     ```
-  
-     ```shell
-      In[15]: article1.comment_set.first().user.name
-     Out[15]: 'Kim'
-     ```
-
-
-
-  7.  1번 글의 2번째 부터 4번째 까지 댓글 가져오기
-  
-     ```shell
-      In [19]: article1.comment_set.all()[0:2]
-     Out[19]: <QuerySet [<Comment: 1글1댓글>, <Comment: 1글2댓글>]>
-     ```
-
-
-  8.  1번 글의 첫번째, 두번째 댓글 가져오기
-
-     ```shell
-      In [20]: article1.comment_set.all()[1:4]
-     Out[20]: <QuerySet [<Comment: 1글2댓글>, <Comment: 1글3댓글>, <Comment: 1글4댓글>]>
-     ```
-   ```
-
-  9.  1번 글의 두번째 댓글을 작성한 사람의 첫번째 게시물의 작성자 이름은?
-
-   ```shell
-     In [25]: article1.comment_set.all()   [1].user.article_set.all()[0].user.name
-   Out[25]: 'Lee'
-   ```
-
-  10. 1번 댓글의 user정보만 가져오면?
-  
-      - `values`, `keys`, `items`
+  ```shell
+  In [32]: article1.comment_set.first().user.name
+  Out[32]: 'Kim'
       
-      ```shell
-      In [33]: Comment.objects.values('user').get(pk=1)
-        Out[33]: {'user': 1}
-      
-      ```
-      
-- 주의해야할 점
+  In [33]: article1.comment_set.all()[0].user.name
+  Out[33]: 'Kim'
+  ```
 
+#### 문제7
 
-     In [34]: c1.user
-     Out[34]: <User: Kim>
-      
-        이건 user객체를 전부 다 들고오기때문에 틀린 답
+- 1번 글의 두번째부터 네번째 까지 댓글 가져오기
 
-  11.  ​	2번 사람이 작성한 댓글을  pk내림차순으로 가져오면?
+  ```shell
+  In [34]: article1.comment_set.all()[2:5]
+  Out[34]: <QuerySet [<Comment: 1글3댓글>, <Comment: 1글4댓글>, <Comment: !1글5댓글>]>
   
-      ```powershell
-      In [37]: user2.comment_set.order_by('-pk')
-        Out[37]: <QuerySet [<Comment: !2글2댓글>, <Comment: !1글5댓글>, <Comment: 1글4댓글>, <Comment: 1글2댓글>]>
-      ```
+  In [35]: article1.comment_set.all()[2:4]
+  Out[35]: <QuerySet [<Comment: 1글3댓글>, <Comment: 1글4댓글>]>
+  ```
 
+#### 문제8
 
+- 1번 글의 첫 번째, 두번째 댓글 가져오기
 
-  12. 제목이 '1글' 이라는 게시글을 전부 가져오면?
+  ```shell
+  In [36]: article1.comment_set.all()[:2]
+  Out[36]: <QuerySet [<Comment: 1글1댓글>, <Comment: 1글2댓글>]>
+  ```
 
-      ```powershell
-      In [41]: Article.objects.filter(title='1글')
-      Out[41]: <QuerySet [<Article: 1글>]>
-      ```
+#### 문제9
 
+- 1번 글의 두번째 댓글을 작성한 사람의 첫번째 게시물의 작성자의 이름
 
+  ```shell
+  In [43]: article1.comment_set.all()[1].user.article_set.first().user.name
+  Out[43]: 'Lee'
+  
+  # 1번 글의 세번째 댓글을 작성한 사람의 첫번째 게시물의 작성자의 이름
+  In [37]: article1.comment_set.all()[2]
+  Out[37]: <Comment: 1글3댓글>
+  
+  In [38]: article1.comment_set.all()[2].user
+  Out[38]: <User: Kim>
+  
+  In [39]: article1.comment_set.all()[2].user.article_set.all()
+  Out[39]: <QuerySet [<Article: 1글>, <Article: 2글>]>
+  
+  In [40]: article1.comment_set.all()[2].user.article_set.first()
+  Out[40]: <Article: 1글>
+  
+  In [41]: article1.comment_set.all()[2].user.article_set.first().user
+  Out[41]: <User: Kim>
+  
+  In [42]: article1.comment_set.all()[2].user.article_set.first().user.name
+  Out[42]: 'Kim'
+  
+  In [43]: article1.comment_set.all()[1].user.article_set.first().user.name
+  Out[43]: 'Lee'
+  ```
 
+#### 문제10
 
+- 1번 댓글의 user 정보만 가져오기
+
+  `values`, `keys`, `items`
+
+  ```shell
+  In [48]: Comment.objects.values('user').get(pk=1)
+  Out[48]: {'user': 7}
+  ```
+
+#### 문제11
+
+- 2번 사람이 작성한 댓글을 pk 내림차순으로 가져오면?
+
+  ```shell
+  In [52]: user2.comment_set.all().order_by('-pk')
+  Out[52]: <QuerySet [<Comment: !2글2댓글>, <Comment: !1글5댓글>, <Comment: 1글4댓글>, <Comment: 1글2댓
+  글>]>
+  
+  In [53]: user2.comment_set.all().order_by('pk')
+  Out[53]: <QuerySet [<Comment: 1글2댓글>, <Comment: 1글4댓글>, <Comment: !1글5댓글>, <Comment: !2글2댓
+  글>]>
+  
+  In [54]: user2.comment_set.order_by('-pk')
+  Out[54]: <QuerySet [<Comment: !2글2댓글>, <Comment: !1글5댓글>, <Comment: 1글4댓글>, <Comment: 1글2댓
+  글>]>
+  
+  In [55]: user2.comment_set.order_by('pk')
+  Out[55]: <QuerySet [<Comment: 1글2댓글>, <Comment: 1글4댓글>, <Comment: !1글5댓글>, <Comment: !2글2댓
+  글>]>
+  ```
+
+#### 문제12
+
+- 제목이 '1글' 게시글을 전부 가져오면?
+
+  ```shell
+  In [56]: Article.objects.filter(title='1글')
+  Out[56]: <QuerySet [<Article: 1글>]>
+  ```
 
 
 
