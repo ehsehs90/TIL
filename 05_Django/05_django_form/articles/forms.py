@@ -39,7 +39,7 @@ class CommentForm(forms.ModelForm):
             attrs={
                 'class':'content',
                 'placeholder':'댓글입력해',
-                'rows':5,
+                'rows':1,
                 'cols':30,
             }
         )
