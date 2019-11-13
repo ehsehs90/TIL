@@ -3,6 +3,10 @@
 
 
 {% block body %}
+{% include 'articles/_follow.html' %}
+
+
+
 <h1 class="text-center">DETAIL</h1>
 <p>글 번호 : {{article.pk}}</p>
 <p>글 제목 : {{article.title}}</p>
@@ -49,6 +53,7 @@
   <p><b>댓글목록({{ comments|length}})개</b></p>
   {% for comment in comments %}
   <p>[{{forloop.revcounter}}] [ID:{{comment.user}}] {{comment.content}}</p>
+  
 {% if comment.user == request.user %}   
 {% comment %} {% if comment.user == user %}  {% endcomment %}
   <form action="{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST" style="display:inline">

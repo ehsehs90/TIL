@@ -1,7 +1,7 @@
 import hashlib
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
@@ -55,10 +55,12 @@ def detail(request, article_pk):
     # article = Article.objects.get(pk=article_pk)
     # 첫번째인자 class 두번째인자 pk
     article = get_object_or_404(Article, pk=article_pk)
+    person = get_object_or_404(get_user_model(), pk=article.user_id)
     comment_form = CommentForm()
     # 하나의 Article 에 있는 comments 가져오기 
     comments = article.comment_set.all()
     context = {'article': article,
+                'person':person,
                 'comment_form': comment_form,
                 'comments': comments,
                  }
@@ -192,21 +194,22 @@ def like(request, article_pk):
 
 @login_required
 def follow(request, article_pk, user_pk):
-    # 지금 필요한 건? 게시글 위에 User정보 + follow상태 보이도록하자
+    # 지금 필요한 건? 게시글 위에 작성자 User정보와 + 작성자의 follow상태(user) 보이도록하자
     # 게시글 작성한 유자
+    # 장고 내부적으로 구현되어있는 user class -를 갖고올 수 있는 helper 메서드: get_user_model()를 사용해
+    # User models 에 접근한다.
     person = get_object_or_404(get_user_model(), pk=user_pk)
-
     # 지금 접속하고 있는 유저
     user = request.user
-
     # 게시글 작성 유저 팔로워 명단에 접속 중인 유저가 있을 경우
     # 언팔로우
-    if user in person.followers.all():
-        person.followers.remove(user)
-    #명단에 없으면
-    #팔로우
-    else:
-        person.followers.add(user)
-
-
+    # if  article.user_followers.filter(pk=user.pk).exists():
+    #    article.user_followers.remove(user)
+    if person != user:
+        if user in person.followers.all():
+            person.followers.remove(user)
+        #명단에 없으면
+        #팔로우
+        else:
+            person.followers.add(user)
     return redirect('articles:detail', article_pk)

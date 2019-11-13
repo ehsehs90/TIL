@@ -19,5 +19,6 @@ urlpatterns = [
     path('index/', views.index ,name ='index'), #READ Logic - Index
     path('create/', views.create, name='create'),
     path('<int:article_pk>/like/', views.like, name='like'),
+    path('<int:article_pk>/follow/<int:user_pk>/', views.follow, name='follow'),
    
 ]
