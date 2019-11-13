@@ -7,16 +7,12 @@
 <h1 class ="text-center"> articles의 index.html입니다</h1>
 <a href = "{% url 'articles:create' %}" > [new] </a>
 <hr>
+<div class ="row">
 {% for article in articles %}
-<br>
-<p> 작성자 {{article.user}}</p>
-<p style="display:inline">[{{article.pk}}] {{article.title}}  </p style="display:inline">
-<a href="/articles/{{article.pk}}/"  class="btn btn-primary" style="display:inline">[DETAIL]</a>
-<br>
-<hr>
-
+<!-- 모듈화 시켜둔 article 템플릿 가져오기 -->
+  {% include 'articles/_article.html' %}
 {% endfor %}
-
+</div>
 
 {% endblock %}
 

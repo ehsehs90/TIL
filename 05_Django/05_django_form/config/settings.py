@@ -126,3 +126,6 @@ STATIC_URL = '/static/'
 # - 기본 값은 '/accounts/login/'
 # #만약 앱 이름이 달라서 커스터마이징이 필요하면
 # LOGIN_URL = '/members/login/'
+
+# 새롭게 USER MODEL 만든걸 장고가 바라보도록 바꿔준다
+AUTH_USER_MODEL = 'accounts.User'

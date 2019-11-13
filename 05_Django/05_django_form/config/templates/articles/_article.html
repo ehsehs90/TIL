@@ -1,0 +1,35 @@
+<br>
+{% comment %} <p> 작성자 {{article.user}}</p>
+<p style="display:inline">[{{article.pk}}] {{article.title}}  </p style="display:inline">
+<a href="/articles/{{article.pk}}/"  class="btn btn-primary" style="display:inline">[DETAIL]</a>
+<i class="fab fa-gratipay"></i> {% endcomment %}
+{% comment %} <br>
+<hr> {% endcomment %}
+
+  <div class="col-12 col-md-6 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{article.title}}
+        </h5>
+        <p class="card-text">
+        {% comment %} 하트 누르려면 a태그로 감싸져있어야함 {% endcomment %}
+        <a href="{% url 'articles:like' article.pk %}"> 
+        <!-- 사용자가 좋아요 누른 상태 -> 꽉찬 하트 -->
+          {% if request.user in article.like_users.all %}
+            <i class="fas fa-heart"></i>            
+          <!-- 사용자가 좋아요 안 누른 상태 -> 빈 하트-->
+          {% else %}
+            <i class="far fa-heart"></i>
+          {% endif %}
+          </a><br>
+        
+        {{article.like_users.all|length}}명이 좋아요
+        {{article.created_at}}</p><br>
+        
+        
+        <a href="{% url 'articles:detail' article.pk %}" class="btn btn-primary">상세보기</a>
+      </div>
+    </div>
+  </div>
+
+

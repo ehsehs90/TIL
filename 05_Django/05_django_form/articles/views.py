@@ -1,6 +1,7 @@
 import hashlib
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article, Comment
 from .forms import ArticleForm, CommentForm
@@ -172,3 +173,40 @@ def comments_delete(request, article_pk, comment_pk):
             comment.delete()
     return redirect('articles:detail', article_pk)
       
+@login_required
+def like(request, article_pk):
+    #좋아요 누를 게시글 가져오기
+    article = get_object_or_404(Article, pk= article_pk)
+    # 현재 접속하고 있는 유저
+    user = request.user
+
+    #현재 게시글 좋아요 누른 사람 목록에서, 현재 접속한 유저가 있을 경유
+    #    -> 좋아요 취소
+    if article.like_users.filter(pk=user.pk).exists():
+        article.like_users.remove(user)
+    #목록에 없을 경우 -> 좋아요 누르기
+    else:
+        article.like_users.add(user)
+    return redirect('articles:index')
+
+
+@login_required
+def follow(request, article_pk, user_pk):
+    # 지금 필요한 건? 게시글 위에 User정보 + follow상태 보이도록하자
+    # 게시글 작성한 유자
+    person = get_object_or_404(get_user_model(), pk=user_pk)
+
+    # 지금 접속하고 있는 유저
+    user = request.user
+
+    # 게시글 작성 유저 팔로워 명단에 접속 중인 유저가 있을 경우
+    # 언팔로우
+    if user in person.followers.all():
+        person.followers.remove(user)
+    #명단에 없으면
+    #팔로우
+    else:
+        person.followers.add(user)
+
+
+    return redirect('articles:detail', article_pk)

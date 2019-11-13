@@ -68,3 +68,6 @@ def update(request):
 def delete(request):
     request.user.delete()
     return redirect('movies:index')
+
+
+    
