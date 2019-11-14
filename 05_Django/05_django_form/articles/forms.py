@@ -28,7 +28,7 @@ class ArticleForm(forms.ModelForm):
     #ex) 사진 한장 ( 촬영장비이름, 촬영환경 등 )
     class Meta:
         model = Article
-        fields = '__all__'      #원하는것만 필드에 나타나게 할 수 있다 ( 'title','content',)
+        fields = 'title','content'      #원하는것만 필드에 나타나게 할 수 있다 ( 'title','content',)
 
 
 class CommentForm(forms.ModelForm):

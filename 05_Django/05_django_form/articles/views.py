@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Article, Comment
+from .models import Article, Comment, Hashtag
 from .forms import ArticleForm, CommentForm
 
 # Create your views here.
@@ -37,6 +37,15 @@ def create(request):
             # title = form.cleaned_data.get('title')
             # content = form.cleaned_data.get('content')
             # article = Article.objects.create(title = title, content=content)
+            
+            # hashtag
+            # 게시글 내용을 잘라서 리스트로 만듬.
+            for word in article.content.split():
+                # word가 '#'으로 시작할 경우 해시태그 등록
+                # word.startswith('#')
+                if word[0] == '#':                    
+                    hashtag, created = Hashtag.objects.get_or_create(content=word)
+                    article.hashtags.add(hashtag)
             
         return redirect('articles:detail', article.pk)
 
@@ -93,7 +102,18 @@ def update(request, article_pk):
                 # article.title = form.cleaned_data.get('title')
                 # article.content = form.cleaned_data.get('content')
                 # article.save()
-                return redirect('articles:detail',article.pk)    
+
+                #hashtag
+                #기존 해시태그를 전부 삭제한 뒤 등록하는로직으로 간다
+                #왜냐하면 사용자는 content를 수정할 수 잇기 때문에
+                #일일히 대조해서 hashtag를 등록하는 로직은 복잡하다
+                article.hashtags.clear()
+                for word in article.content.split():
+                    if word[0] == '#': 
+                        hashtag, created = Hashtag.objects.get_or_create(content=word)
+                        article.hashtags.add(hashtag)
+
+                return redirect('articles:detail',article.pk)   
         else:
 
             form = ArticleForm(instance=article)
@@ -235,3 +255,14 @@ def explore(request):
                 'comment_form':comment_form,
                 }
     return render(request, 'articles/article_list.html',context)
+
+
+#Hash tag 글 모아보기
+def hashtag(request, hash_pk):
+    hashtag = get_object_or_404(Hashtag, pk=hash_pk)
+    articles= hashtag.article_set.order_by('-pk')
+    context ={
+        'hashtag':hashtag,
+        'articles':articles,
+    }
+    return render(request, 'articles/hashtag.html' ,context)

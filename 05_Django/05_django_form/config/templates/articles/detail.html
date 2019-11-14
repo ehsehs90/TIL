@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load make_link %}
 {% load bootstrap4 %}
 
 
@@ -21,10 +22,9 @@
 <input type="submit" value="게시글 삭제"  class="btn btn-danger" style="display:inline">
 </form>
 
-
 <a href="/articles/index" class="btn btn-warning" style="display:inline">[back]</a>
 {% if request.user == article.user %}
-<a href="{% url 'articles:update' article.pk %}"  class="btn btn-warning" style="display:inline"> [edit]</a>
+<a href="{% url 'articles:update' article.pk %}"  class="btn btn-warning" style="display:inline">[edit]</a>
 
 {% endif %}
 

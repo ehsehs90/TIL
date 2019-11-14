@@ -22,5 +22,5 @@ urlpatterns = [
     path('<int:article_pk>/follow/<int:user_pk>/', views.follow, name='follow'),
     path('explore/',views.explore, name='explore'),
     path('list/',views.list, name='list'),
-   
+    path('<int:hash_pk>/hashtag/', views.hashtag, name='hashtag'),   
 ]

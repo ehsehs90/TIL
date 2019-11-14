@@ -6,10 +6,19 @@
 
 ### 1.1 Model 설정
 
+[articles Application]
+
+- models.py
+  - `article.like_users` 로 User가 '좋아요' 누른 게시글을 알 수 있다
+  - `related_name = like_articles`
+    - 현재 상황에서 `related_name`설정은 필수
+      - `like_users`필드에 related_name을 쓰지 않으면, User 입장에서 `article_set`을 사용할 경우 user필드를 가져올 지 like_users필드를 갖고 올지 인식하지 못한다
+      - related_name설정과 함께 해당 필드는 article_set과 같은 방식으로 호출하지 못하고, like_users방식으로 호출해야한다
+
 - `blank=True`
 
   - 최초 작성되는 글에는 좋아요가 없고, 글이 작성되더라도 좋아요를 받지 못할 수도 있다.
-  - 이 옵션을 줘서 유효성 검사를 통과한다
+  - `blank`옵션을 줘서 유효성 검사를 통과한다
   - 실제 데이터베이스에는 null 이들어가는게 아니라 빈스트링 ('` `') 형태로 들어간다
 
   ```python
@@ -27,9 +36,15 @@
 
   
 
-- 현재 상황에서 `related_name`설정은 필수
-  - `like_users`필드에 related_name을 쓰지 않으면, User 입장에서 ㅁarticle_set을 사용할 경우 user필드를 그져올 지 like_users필드를 갖고 올지 인식하지 못한다
-  - related_name설정과 함께 해당 필드는 article_set과 같은 방식으로 호출하지 못하고, like_users방식으로 호출해야한다
+  - migrate를 수행하고 sqlite3 를 확인한다.
+
+  ```
+  $ python manage.py makemigrations
+  $ python manage.py migrate
+  ```
+
+  
+
 - 사용할 수 있는 ORM기능(명령어)
   - `user.article_set.all()`: 유저가 작성한 게시글 전부 (1:N)
   - `user.like_articles.all()` : 유저가 좋아요 누른 게시글 전부 (M:N)
@@ -40,17 +55,61 @@
 
 ### 1.2 View & URL
 
+[articles Application]
+
 - `exists() & filter()`
-
-  - filter() : 특정한 조건에 맞는 레코드들을 가져온다.
+- filter() : 특정한 조건에 맞는 레코드들을 가져온다.
   - exists() : 최소한 하나의 레코드가 존재하는지 여부를 말해준다.
-
+  
 - `get() & filter()`
 
   - get() : 데이터가 없는 경우 에러 발생
   - filter() : 데이터가 없으면 빈 쿼리셋을 리턴
 
+- `views.py`
 
+  - `로그인한 사용자만 좋아요`를 누를 수 있도록 한다.
+  - `user in article.like_users.all():` 현재 게시글에 좋아요 누른 사람의 목록
+    - 현재 접속한 User가 있는 경우
+      - 좋아요 취소
+      - User를 현재 게시글에 `좋아요`를 누른 사람의 목록에서 삭제한다
+    - 현재 접속한 User가 없는 경우
+      - 좋아요
+      - User를 현재 게시글에 '좋아요'를 누른 사람의 목록에 추가한다
+  - `views.py`
+
+  ```python
+  @login_required
+  def like(request, article_pk);
+  	# 좋아요 누른 게시글 가져오기
+      article = get_object_or_404(Article, pk=article_pk)
+      # 현재 접속하고 있는 User
+      user = request.user
+      # 현재 게시글에 좋아요를 누른 사람의 목록에서
+      # 현재 접속한 User가 있는 경우 -> 좋아요 취소
+      # 현재 접속한 User가 없는 경우 -> 좋아요 
+      if user in article.like_users.all():
+          article.like_users.remove(user)
+      else : 
+          # article.like_users.add(user)
+          article.like_users.add(user)
+  
+      return redirect('articles:index')    
+  ```
+
+  - `urls.py`
+
+    ```python
+    from django.urls import path
+    from . import views
+    
+    app_name="articles"
+    urlpatterns = [
+        path('<int:article_pk>/like/', views.like, name="like"),
+    ]
+    ```
+
+    
 
 
 
@@ -76,28 +135,49 @@
 
   - Bootstrap 공식 홈페이지 > Documentation > cards
 
+    - index.html
+    - `{% indlcude articles/_article.html` %} : 모듈화 한 템플릿 가져오기
+    
     ```html
     <!-- articles/index.html -->
     ...
     <div class="row">
         {% for article in articles %}
         	{% include 'articles/_article.html' %}
-        {% endfor %}  
+    {% endfor %}  
     </div>
     ```
-
+    
     ```python
     <!-- articles/_article.html -->
     <div class ="col-12 col-md-6">
-    	카드디자인
+	<div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    글 제목: {{ article.title }}
+                </h5>
+                <p class="card-text">
+                    <a href="{% url 'articles:like' article.pk %}">좋아요</a><br>
+                    {{ article.like_users.all|length }}명이 이 글을 좋아합니다. <br>
+                    생성시각: {{ article.created_at }}
+                </p>
+                <a href="{% url 'articles:detail' article.pk %}" class="btn btn-primary">상세보기</a>
+            </div>
+        </div>
     </div>
     ```
-
+    
     
 
 #### 1.3.2 Font-Awesome 아이콘 적용
 
-> Font-Awesome 홈페이지 가입 후 kits 로 들어가 코드 복사
+> Font-Awesome 홈페이지 가입 후 kits 로 들어가 코드 복사하여 base.html에넣어준다
+
+```python
+<script src="https://kit.fontawesome.com/[kits코드번호].js" crossorigin="anonymous"></script>
+```
+
+
 
 ```html
 <!-- base.html-->
