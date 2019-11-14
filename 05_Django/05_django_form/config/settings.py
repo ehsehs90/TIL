@@ -27,13 +27,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = (    
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Application definition
-
 INSTALLED_APPS = [
     'articles',
     'accounts',
     'bootstrap4',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.kakao',
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -129,3 +139,7 @@ STATIC_URL = '/static/'
 
 # 새롭게 USER MODEL 만든걸 장고가 바라보도록 바꿔준다
 AUTH_USER_MODEL = 'accounts.User'
+
+
+# 로그인 이후 리다이렉트 경로
+LOGIN_REDIRECT_URL = 'articles:index'
