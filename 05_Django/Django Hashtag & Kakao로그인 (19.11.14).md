@@ -28,10 +28,17 @@ class Article(models.Model):
 - admin page에 보일 수 있도록 `admin.py`에 등록
 
 - ```python
-  from django.contrib
-  ```
+  from django.contrib import admin
+  from .models import Hashtag
+```
+  
+  - sqlite3 로 테이블 생성 확인
+  
+  ![1573778075579](assets/1573778075579.png)
 
-- 
+### 1.2 CREATE
+
+> 사용자가 작성한 (title/content)에서 `#`로 시작하는 단어(해시태그)만 뽑아서 해시태그로 저장한다. 리스트 반복문을 돌려 앞자리가 '#'으로 시작하는 단어를 해시태그 테이블에 등록한다. 동시에 해당 해시태그 목록에 추가한다
 
 ````python
 title : 출근
@@ -51,25 +58,226 @@ content str 타입
 
 ````
 
+- `unique =True` 이기때문에 같은 해시태그가 들어오면 에러발생
+
 - `get_or_create()`
   - word와 같은 해시태그를 찾고 있으면 기존 객체 반환, 없으면 새로운 객체 생성
   - `hashtag, created = Hashtag.objects.get_or_create(content=word)`
     - 새로운 객체 생성되면 created = True
     - 기존 객체 반환 되면 created = False
 
-### 1.2 CREATE
+- `views.py`
 
+  - create 로직 수정
 
+    - `article.content.split()`: 게시글 내용을 잘라 리스트로 만든다
 
-### 1.3 UPDATE
+    - `word.startwith('#')` : word 가 '#'로 시작하는지 확인한다
 
-### 1.4 UPDATE
+      - `#` 로 시작하면 해시태그 등록
+      - 만약 기존에 있던 해시태그면 기존객체를 'hashtag'로 반환
+      - 새로운 해시태그면 새로운 객체를 생성해 해당 게시글의 해시태그 목록에 추가한다
 
+      ```python
+      @login_required
+      def create(request):
+          if request.method=="POST":
+              form = ArticleForm(request.POST)
+              
+              # 유효성 검증
+              if form.is_valid():
+                  article = form.save(commit=False)
+                  article.user = request.user
+                  article.save()
+      
+                  # hashtag
+                  for word in article.content.split():
+                      if word.startswith('#'):
+                          hashtag, created = Hashtag.objects.get_or_create(content=word)
+                          article.hashtags.add(hashtag)
+      
+                  return redirect('articles:detail', article.pk)
+          
+          else :
+              form = ArticleForm()
+          context = {
+              'form' : form
+          }
+          return render(request, 'articles/form.html', context)
+      ```
 
+  
 
+### 1.3 UPDATE 
 
+  - update로직 수정
 
-### 1.5 READ
+    > 사용자가 게시글 수정을 통해 해시태그를 변경할 수 있다. 따라서 update  후 기존의 해시태그와 비교해 삭제 및 추가 하는 로직보다 update 시 해시태그를 다시 등록하는 로직이 더 간단하므로 후자의 방법으로 구현한다.
+
+    - `article.hashtag.clear()` : 해당 게식들의 해시태그 목록을 비운다.
+
+    ```python
+    @login_required
+    def update(request, article_pk):
+        article = get_object_or_404(Article, pk=article_pk)
+        if request.user == article.user:
+    
+            if request.method == 'POST':
+                form = ArticleForm(request.POST, instance=article)
+    
+                if form.is_valid():
+                    article = form.save()
+    
+                    # hashtag
+                    article.hashtags.clear()
+                    for word in article.content.split():
+                        if word.startswith('#'):
+                            hashtag, created = Hashtag.objects.get_or_create(content=word)
+                            article.hashtags.add(hashtag)
+    
+    
+                            return redirect('articles:detail', article_pk)
+    
+                        else :
+                            form = ArticleForm(instance=article)
+    
+                            else:
+                                return redirect('articles:detail' , article_pk)
+                            context = {
+                                'form' : form,
+                                'article' : article,
+                            }
+                            return render(request, 'articles/form.html', context)
+    ```
+
+    
+
+### 1.5 READ 
+
+####  1.5.1 해시태그 글 모아보기
+
+> 특정 해시태그 (예: '#빵') 이 들어있는 게시글을 모아보자
+
+- `views.py`
+
+```python
+#Hash tag 글 모아보기
+def hashtag(request, hash_pk):
+    hashtag = get_object_or_404(Hashtag, pk=hash_pk)
+    articles= hashtag.article_set.order_by('-pk')
+    context ={
+        'hashtag':hashtag,
+        'articles':articles,
+    }
+    return render(request, 'articles/hashtag.html' ,context)
+```
+
+- hashtag.html
+
+  - `{{article.comment_set.all|length}}` : 게시글에 등록된 댓글 수
+  - `{{aticle.like_users.all|length}}`: 게시글을 좋아하는 User의 수
+
+  ```javascript
+  {% extends 'base.html' %}
+  {% block body %}
+  
+  {% load make_link %}
+  
+  <h1> {{hashtag.content}} 글 모아보기 </h1>
+  
+  <h3> {{articles|length}} 개의 글이 있습니다. </h3>
+  {% for article in articles %}
+  <div class="container">
+    <p>글 제목 : {{article.title}} </p>
+    <p>글 내용 : {{article.content}} </p>
+    <p> {{article.comment_set.all|length}} 개의 댓글이 있습니다.  </p>
+    <p> {{article.like_users.all|length}}명이 이 글을 좋아합니다. </p>
+  </div>
+    <hr>
+   <a href="{% url 'articles:detail' article.pk %}">게시글바로가기</a>
+  {% endfor %}
+  
+  {% endblock  %}
+  ```
+
+- `urls.py`
+
+  ```python
+  from django.urls import path
+  from . import views
+  
+  app_name="articles"
+  urlpatterns = [
+      .
+      .
+      .
+      path('<int:hash_pk>/hashtag/', views.hashtag, name="hashtag"),
+  ]
+  ```
+
+#### 1.5.2 해시태그에 a태그 붙이기
+
+![1573779644210](assets/1573779644210.png)
+
+- templates 폴더/ make_link.py 생성
+
+  - 링크를 만들어 주는 사용자 정의 템플릿 태그를 만들어준다
+    - 서버를 껐다 켜야 반영 됨
+
+- make_link.py
+
+  - `f'<a href = "/articles/{hashtag.pk}/hashtag/">{hashtag.content}</a>  ' ` : 뒤에 띄어쓰기를 추가해줘야한다
+
+  - `content = article.content + '  '`
+
+    - 만약 게시글의 끝이 '#빵 ' 이 아닌 '#빵'으로해시태그가 되어있는 경우를 대비하여  ' '를 붙여준다
+
+    - ```python
+      from django import template
+      
+      register = template.Library()
+      
+      @register.filter
+      def hashtag_link(article):
+          content = article.content + ' '
+          hashtags = article.hashtags.all()
+      
+          for hashtag in hashtags:
+              content = content.replace(
+                  hashtag.content + ' ', f'<a href="/articles/{hashtag.pk}/hashtag/">{hashtag.content}</a> '
+              )
+      
+          return content
+      ```
+
+- detail.html
+
+  - `{% load make_link %} 과 {{article|hashtag_link}}를 통해 게시글의 내용 중 해시태그를 찾아 a태그를 적용한다.
+
+  ```javascript
+  {% extends 'base.html' %}
+  {% load make_link %}
+  {% block body %}
+  {% include 'articles/_follow.html' %}
+  {% load bootstrap4 %}
+  <div class="container">
+    <h2>{{article.title}}</h2>
+    <div class="text-align mt-4">
+      <p>내용  :  {{article|hashtag_link}}</p>
+      <p>최초 업로드 날짜  :  {{article.created_at}}</p>
+      <p>최종 수정 날짜  :  {{article.updated_at}}</p>
+    </div>
+  
+  ```
+
+  
+
+### 1.6 Django Template Filter : safe
+
+> Django Template Filter를 사용하자!
+
+- `safe`를 추가
+  - 내장 필터인 safe필터를 사용하여, tag escape 를 방지할 수 있다
 
 
 
