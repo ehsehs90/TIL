@@ -65,7 +65,7 @@ $ django-admin startproject config . # 현재 폴더를 프로젝트 폴더로 �
 
 ```bash
 #반드시 manage.py 가 있는 경로에서 명령어 실행
-# manage.py : 장고프로젝트와 의사소통하는 상호작용 커맨드라인 유틸리ㅌ;
+# manage.py : 장고프로젝트와 의사소통하는 상호작용 커맨드라인 유틸리티
 $ python manage.py runserver
 ```
 
