@@ -1,1 +1,22 @@
-<h1>하이하이~</h1>
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1 class = "text-center"> MOVIE INDEX</h1>
+<a href ="{% url 'movies:create' %}" class="btn btn-warning" style="display:inline">CREATE</a>
+<div class="card" style="width: 22rem;" orientation="horizental">
+{% for movie in movies %}
+<img src="C:/Users/student/Desktop/TIL/05_Django/07_django_PJT2/uploads/{{movie.poster}}" class="card-img-top" alt="..." weight="200px" height="320px">
+<div class="card-body">
+    <h5 class="card-title">[{{movie.title}}]</h5>    
+    <p class="card-text">[평점] {{movie.score}} </p>
+    <a href="/movies/{{movie.pk}}" class="btn btn-primary">더보기</a> 
+    <hr><br>
+  </div>
+    {% endfor %}
+</div>
+
+
+
+{% endblock body %}
+

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block body %}
+
+
+  <form action="{% url 'movies:create' %}", method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+    <label for="title">TITLE </label>
+    <input type="text" id="title" name="title" > <br>
+
+    <label for="description"> DESCRIPTION </label>
+    <textarea type="text" id="description" name="description" cols="30" rows="10"> </textarea> <br>
+
+    <label for="image">POSTER</label>
+    <input type="file" name="image" id="image" accept="image/*" ><br>
+
+    <input type="submit">
+  </form>
+
+  <hr>
+  <a href="{% url 'movies:index' %}">[BACK]</a>
+
+{% endblock  %}

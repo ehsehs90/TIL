@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+{% block body %}
+
+<h1 class="text-center">DETAIL</h1>
+<p>글 번호 : {{movie.pk}}</p>
+<p>글 제목 : {{movie.title}}</p>
+<p>poster : <img src="{{movie.poster.url}}"/></p>
+<p>생성 시각 : {{movie.created_at}}</p>
+<p>업데이트 시각 : {{movie.updated_at }}</p>
+<p>생성 유저 : {{movie.user }}</p>
+
+
+
+<hr>
+
+<a href="/movies/" class="btn btn-warning" style="display:inline">목록</a>
+<a href="/movies/" class="btn btn-warning" style="display:inline">수정</a>
+<a href="/movies/" class="btn btn-warning" style="display:inline">삭제</a>
+<a href="/movies/{{movie.pk}}/ratings/new" class="btn btn-warning" style="display:inline">평점남기기</a>
+
+<br>
+
+{% endblock %}
