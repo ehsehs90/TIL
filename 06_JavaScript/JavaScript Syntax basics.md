@@ -233,3 +233,70 @@ console.log(sub(2,1))
   ```
 
   
+
+
+
+
+
+### 익명/ 1회용 함수( Anonymous function)
+
+> JavaScript 에서는 1회용으로 사용하는 함수는 이름을 짓지 않을 수 있다.
+>
+> 일반적으로는 함수는 함수를 정의, 변수에 함수를 저장하는 과정 등을 거쳐서 실행한다. 하지만 `즉시실행함수`는 함수가 선언되자마자 즉시 실행된다.
+>
+> 사용이유?
+>
+> **초기화**에 사용한다.
+>
+> - 즉시실행함수는 선언되자마자 실행되기 때문에, 같은 함수를 다시 호출할 수는 없다. 그래서 초기화 함수에 주로 사용된다.
+
+```javascript
+//JS에는 1회용으로 사용할 함수는 이름을 짓지 않을 수 있다
+// function 키워드를 활용해서 함수를 선엉할 때는, 이름을 지정하지 않으면 에러가 난다.
+
+function (num) { return num ** 3 }
+
+
+// 1. 기명함수로 만들기 ( 변수, 상수에 할당)
+const cube = function( num ) { return num **3 }
+// 화살표 함수는 기본적으로 익명함수지만, 변수및 상수에 할당해서 기명함수처럼 사용 가능
+const squreRoot = num => num ** 0.5
+
+//2.익명함수로 바로 실행시키기
+console.log(
+	(function( num ) { return num **3 })(2)
+)
+```
+
+### 6. 배열(array)
+
+
+
+
+
+### 7. 객체 (Object)
+
+### JSON
+
+> JavaScript Object Notation - JavaScript  객체 표기법
+
+- **웹에서 데이터 주고 받을 때 형식**으로 대표적으로 JSON, XML, YAML 등이 있다. **주로 JSON**을 사용한다.
+- Key - Value  형태의 자료구조를 JavaScript Object와 유사한 모습으로 표현하는  표기법
+- 하지만 JSON은 모습만 비슷할 뿐이고, 실제로 Object처럼 사용하려면 다른 언어들 처럼 Parsing(구문 분석)하는 작업이 필요하다.
+
+
+
+### 8. Array Helper Method
+
+> Helper란 자주 사용하는 로직을 재활용할 수 있게 만든 일종의 Library
+>
+> ES6 부터 본격적으로 사용되기 시작했다.
+
+- 더욱 자세한 사용법은 `MDN` 문서 참고
+
+### 8.1`forEach`
+
+- `arr.forEach(callback(element, index, array))`
+- 주어진 callback을 배열에 있는 각 요소에 대해 한번씩 실행.
+- 
+
