@@ -298,5 +298,69 @@ console.log(
 
 - `arr.forEach(callback(element, index, array))`
 - 주어진 callback을 배열에 있는 각 요소에 대해 한번씩 실행.
-- 
+
+### 8.2 map
+
+- `arr.map(callback(element))`
+- 배열 내의 모든 요소에 대하여 주어진 콜백 함수를 호출한 결과를 모아 새로운 배열 return
+- `map`, `filter` 둘 다 사본을 return하는 거고, 원본은 바뀌지 않는다. 만약 return을 안적으면 undefined가 배열에 담김!
+
+### 8.3` filter`
+
+- `arr.filter(callback(element))`
+
+- 주어진 콜백 함수의 테스트를 통과하는 모든 요소를 모아서 새로운 배열로 반환한다. (콜백 함수에 조건을 적어서 원하는 요소들만 filtering한다)
+
+  ```javascript
+  // filter Helper 를 사용해서 numbers 배열 중 50보다 큰 값만 필터링해서 새로운배열에 저장하기
+  const numbers = [15,35,13,36,69,3,61,55,99,5]
+  const newNumbers = numbers.filter( number => number>50 )
+  
+  
+  
+  console.log(numbers)
+  console.log(newNumbers)
+  ```
+
+  - ![1574126162573](assets/1574126162573.png)
+
+### 8.4 `reduce`
+
+- `arr.reduce(callback(acc, element, index))`
+  - 첫 번째 매개변수 : 누적 값(전 단계의 결과물)
+  - 두 번째 매개변수 : 현재 배열 요소 값
+  - 세 번째 매개변수 : 배열 순서 (인덱스 번호)
+
+- 배열의 각 요소에 대해 주어진 콜백 함수를 실행하고 하나의 결과 값을 반홚나다. **배열 내의 숫자 총합, 평균 계산 등 배열의 값을 하나로 줄이는 동작**을 한다.
+
+- map은 배열의 각 요소를 변형, reduce는 배열 자체를 변형한다.
+- map. filter 등 여러 메소드들의 동작을 대부분 대체 가능
+
+
+
+### 8.5 `find`
+
+- `arr.find(callback(elem, index, array))`
+- 주어진 **판별 함수를 만족하는 첫 번째 요소의 값**을 반환.
+  - 값이 없으면 `undefined`
+
+- 조건에 맞는 인덱스가 아니라 **요소 자체를 원할** 때 사용
+
+  ```javascript
+  //find Helper
+  var STUDENTS = [
+    {name : '서혁진', age: 26}, 
+    {name : '오은애', age: 26}, 
+    {name : '공선아', age: 25}, 
+    {name : '이도현', age: 26}, 
+    {name : '최주현', age: 27}, 
+  ]
+  
+  const students = STUDENTS.find(function(student){return student.age==27})
+  // 화살표 함수로 바꿔보기
+  // const students = STUDENTS.find( student => student.age==27 )
+  console.log(students)
+  ```
+
+  ![1574127538764](assets/1574127538764.png)
 
