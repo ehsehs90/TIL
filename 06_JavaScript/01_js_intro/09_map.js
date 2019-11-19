@@ -39,3 +39,16 @@ const heights = images.map( function(image) {return image.height} )
 
 console.log(heights)
 console.log(images)
+
+
+//map 헬퍼를 사용해서 "distance/time" = 속도" 를 저장하는 새로운 배열 speeds를 만드세요
+
+
+const trips = [
+  {distance:34, time:10},
+  {distance:90, time:10},
+  {distance:120, time:10},
+]
+
+const speeds = trips.map(function (trip) {return trip.distance / trip.time})
+console.log(speeds)
