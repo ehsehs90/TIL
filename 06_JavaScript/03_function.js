@@ -63,3 +63,8 @@ console.log(typeof returnObject())
 returnObject = () => ({key:'value'})
 console.log(returnObject())
 console.log(typeof returnObject())
+
+
+//6. 기본 인자 부여하기 (Default Args)
+//인자 개수와 상관 없이 반드시 괄호를 붙인다
+const sayHello = (name='혁진') => `hi! ${name}`

@@ -57,7 +57,11 @@ const areas = []
 //정답코드 (forEach 활용)
 
 images.forEach(function(image){
-  console.log(height*width)
+  console.log(image.height)
+  console.log(image.width)
+})
+images.forEach(function(image){
+  areas.push(image.height*image.width)
 })
 
 console.log(areas)
