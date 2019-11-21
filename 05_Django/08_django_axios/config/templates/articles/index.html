@@ -7,13 +7,52 @@
 <h1 class ="text-center"> ଘ(੭*ˊᵕˋ)੭* ੈ✩‧₊˚ ✩‧₊˚ </h1>
 <a href = "{% url 'articles:create' %}" > [new] </a>
 <hr>
+
+<form class="mb-4" action = "{% url 'articles:search' %}">
+  <div class="form-row justify-content-end">
+    <div class="col-12 col-sm-9 col-md-10">
+      <input type="text" name="query" class="form-control" placeholder="검색어를 입력해주세요">
+    </div>
+    <div class="col-3 col-sm-3 col-md-2">
+      <input type="submit" class="form-control btn btn-success" value="검색">
+    </div>
+  </div>
+</form>
+
+
+
 <div class ="row">
 {% for article in articles %}
 <!-- 모듈화 시켜둔 article 템플릿 가져오기 -->
   {% include 'articles/_article.html' %}
 {% endfor %}
 </div>
+<h1>{{articles.paginator.page_range}}</h1>
 
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+  <!-- 이전 페이지 있으면 이전버튼 나오게 -->
+  {% if articles.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="{% url 'articles:index' %}?page = {{articles.previous_page_number}}" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    {% endif %}
+
+
+    <!-- 페이지 버튼 -->
+    {% for num in articles.paginator.page_range %}
+    <li class="page-item">
+    <a class="page-link" href="{% url 'articles:index' %}?page={{ num }}">{{ num }}</a></li>
+    {% endfor %}
+    <!-- 다음 페이지 있으면 Next 버튼 출력 -->
+    {% if articles.has_next %}
+
+    <li class="page-item">
+      <a class="page-link" href="{% url 'articles:index' %}?page = {{articles.next_page_number}}">Next</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
 <script>
   // 1. 모든 좋아요 버튼 가져오기
   const likeButtons = document.querySelectorAll('.like-button')

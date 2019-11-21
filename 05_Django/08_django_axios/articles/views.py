@@ -1,5 +1,6 @@
 import hashlib
 from itertools import chain
+from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -16,6 +17,17 @@ def index(request):
         gravatar_url = None
 
     articles = Article.objects.all()[::-1]
+    # 1. articles를 Paginator 에 넣기
+    # - Paginator (전체 리스트, 보여줄 개수)
+    paginator = Paginator(articles, 3)
+    # 2. 사용자가 요청한 page 가져오기
+    page =request.GET.get('page') 
+    # 3. 해당하는 page의 article 만 가져오기
+
+    articles = paginator.get_page(page)
+    print(dir(articles))
+    print(dir(articles.paginator))
+
     context =  {'articles': articles,'gravatar_url':gravatar_url,}
     return render(request, 'articles/index.html', context)
 
@@ -279,3 +291,19 @@ def hashtag(request, hash_pk):
         'articles':articles,
     }
     return render(request, 'articles/hashtag.html' ,context)
+
+
+
+
+def search(request):
+    #1. 사용자가 입력한 검색어 가져오기
+    query=request.GET.get('query')
+    #2. DB에서 query가 포함된 제목을 가진 article 가져오기
+    # __contains : 지정한 문자열 포함하는 자료검색
+    # __icontains : 지정한 문자열 포함하는 자료검색  ( 대소문자 구별 x )
+    articles = Article.objects.filter(title__icontains=query)
+    # 3. context 로 템플릿에 전달
+    context = {
+        'articles' : articles,
+     }
+    return render(request, 'articles/search.html', context)
