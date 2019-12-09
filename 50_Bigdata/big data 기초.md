@@ -10,7 +10,7 @@ y = [1,2,3]  #label
 W = tf.Variable(tf.random_normal([1]), name="weight")
 b = tf.Variable(tf.random_normal([1]), name="bias")
 
-H = W*x + b f    
+H = W*x + b     
 ```
 
 
@@ -46,9 +46,7 @@ H = W*x + b #결과값 당연히 node.
 
 # cost(loss) function 
 
-> 최적의H를 만들기 위해서 필요.
->
-> 
+> 최적의H를 만들기 위해서 필요
 
 우리의 목적은 cost함수를 최소로 만드는 W와 b를 구하는 것.
 
@@ -83,7 +81,7 @@ sess.run(tf.global_variables_initializer()) #variable이라는 W와 b사용하�
 
 for step in range(3000):
 
-_, w_val, b_val, cost_val = sess.run([train,W,b,cost]) ##sess.run해가지고 node를 4개 읽어가 각각에 매핑되는 값을 떄리박아
+_, w_val, b_val, cost_val = sess.run([train,W,b,cost])  ## sess.run해가지고 node를 4개 읽어서 각각 매핑되는 값을 넣는다.
 
 
 if step % 300 == 0: # 300 600 900 일떄만 print해서 찍겠습니다
@@ -93,6 +91,10 @@ print("{},{},{}".format(w_val,b_val,cost_val))
 
 
 
+
+
+
+## 경사하강법 gredient decent
 
 ```python
 
@@ -143,13 +145,12 @@ train = optimizer.minimize(cost) ##이거 실행하면 내부적으로 cost 최�
 
 
 
-# tensorflow graph동작시키려면 runner필요함 -> runner는 Session필요&& 초기화
+# tensorflow graph동작시키려면 runner필요함 -> runner는 Session필요 && 초기화
 
 
 sess = tf.Session()
 
 sess.run(tf.global_variables_initializer()) ##tensorflow가 갖고있는 전역변수들을 초기화 시켜준다
-
 
 
 
@@ -166,7 +167,7 @@ if step% 300 == 0: ##300번마다
 print(cost_val)
 
 
-## prediction ::최종목적인H
+## prediction ::최종목적인 H
 
 sess.run(H, feed_dict={x :[300]}) ## x라는 값에 내가 알고싶은 파라미터 ㄱㄱ(주의! x는 배열형태로 줬다 위에서 )
 
@@ -186,8 +187,6 @@ sess.run(H, feed_dict={x :[300]}) ## x라는 값에 내가 알고싶은 파라�
 ##### .csv 파일 read
 
 ```python
-
-
 import tensorflow as tf
 
 import numpy as np
@@ -233,7 +232,7 @@ print(df3.shape) ##결치값 제거한 것
 
 ##데이타를 보건데 완벽한 선형은 아닌듯 보인다.
 
-##저기 보면 하나 딸랑 튀어난 이상한 점 있따 => 정제해야할 필요가 있어보인다.
+##저기 보면 하나 딸랑 튀어난 이상한 점 있다 => 정제해야할 필요가 있어보인다.
 
 ## Why? 저런이상한 데이터가 머신러닝에 가중치를 많이줌.
 
@@ -426,26 +425,23 @@ display(df55.shape)
 
 display(df66.shape)
 
-#*************안되는 이유 remind*************
+*************안되는 이유 remind*************
 
-# #df6=df[["Ozone"]]
+df6=df[["Ozone"]]
 
-# df7=df6.dropna(how="any", inplace=False)
+df7=df6.dropna(how="any", inplace=False)
 
-# display(df7)
+display(df7)
 
-# display(df7.head())
+display(df7.head())
 
-# display(df7.shape)
+display(df7.shape)
 
-# #x_data = (df3["Temp"]-df3["Temp"].min()) / (df3["Temp"].max() - df3["Temp"].min()) ##DataFrame 에서 Series형태로 데이터 뽑아씀
+#x_data = (df3["Temp"]-df3["Temp"].min()) / (df3["Temp"].max() - df3["Temp"].min()) ##DataFrame 에서 Series형태로 데이터 뽑아씀
 
 #y_data = (df3["Ozone"]-df3["Ozone"].min())/ (df3["Ozone"].max() - df3["Ozone"].min())
 
 
-
-전송중...
-사진 설명을 입력하세요.
 
 #training data set
 
@@ -519,7 +515,7 @@ print(cost_val)
 
 ## multiple linear regression
 
-## Ozone data 학습 및 예측
+#### Ozone data 학습 및 예측
 
 ```python
 
@@ -619,12 +615,8 @@ if step % 3000 == 0:
 print(cost_val)
 
 
-
 #prediction
 
 print(sess.run(H, feed_dict={X:[[190,4.7,67]]}))
-
-
-
 ```
 
