@@ -384,3 +384,117 @@ interface HTMLAnchorElement: HTMLElement{
 HTMLElement 는 Element 의 자식이고 Element 는 Node의 자식이다.  Node는 Object 의 자식이다. 이러한 관계를 DOM Tree 라 한다
 
 ![image-20191210234656422](02_DOM.assets/image-20191210234656422.png)
+
+
+
+
+
+### HTML Collection
+
+HTML Collection 은 리턴 결과가 복수인 경우에 사용하게 되는 객체다. 유사배열로 배열과 비슷한 사용방법을 가지고 있지만 배열은 아니다.
+
+```javascript
+<!DOCTYPE html>
+<html>
+<body>
+<ul>
+    <li>HTML</li>
+    <li>CSS</li>
+    <li id="active">JavaScript</li>
+</ul>
+<script>
+console.group('before');
+var lis = document.getElementsByTagName('li');
+for(var i = 0; i < lis.length; i++){
+    console.log(lis[i]);
+}
+console.groupEnd();
+console.group('after');
+lis[1].parentNode.removeChild(lis[1]);
+for(var i = 0; i < lis.length; i++){
+    console.log(lis[i]);
+}
+console.groupEnd();
+</script>
+</body>
+</html>
+```
+
+
+
+
+
+## jQuery객체
+
+### jQuery  객체란?
+
+jQuery 함수의 리턴값으로 jQuery 함수를 이용해서 선택한 엘리먼트들에 대해서 처리할 작업을 프로퍼티로 가지고 있는 객체다.
+
+
+
+### 암시적 반복
+
+jQuery 객체의 가장 중요한 특성은 암시적인 반복을 수행한다는 것이다. DOM 과 다르게,  jQuery 객체의 메소드를 실행하면 선택된 엘리먼트 전체에 대해서 동시에 작업이 처리된다.
+
+암시적 반복은 값을 설정할 때만 동작한다. 값을 가져올 때는 선택된 엘리먼트 중 첫번째에 대한 값만 반환한다.
+
+### 체이닝
+
+chaining 이란 선택된 엘리먼트에 대해서 연속적으로 작업을 처리할 수 있는 방법이다
+
+### 조회결과
+
+jQuery 객체에는 조회된 엘리먼트가 담겨있다. jQuery 객체는 일종의 유사배열의 형태로 조회된 엘리먼트를 가지고 있기 때문에 배열처럼 사용해서 엘리먼트를 가져올 수 있다.
+
+```javascript
+<ul>
+    <li>html</li>
+    <li>css</li>
+    <li>JavaScript</li>
+</ul>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    console.log($('li').length);
+    console.log($('li')[0]);
+    var li = $('li');
+    for(var i=0; i<li.length; i++){
+        console.log(li[i]);
+    }
+</script>
+```
+
+
+
+한가지 주의할 것은 li[i]의 값은 해당 엘리먼트에 대한 jQuery객체가 아니라 DOM 객체라는 것이다. 따라서 jQuery 의기능을 이용해서 이 객체를 제어하려면 jQuery 함수를 이용해야한다.
+
+```javascript
+for(var i=0; i<li.length; i++){
+    $(li[i]).css('color', 'red');
+}
+```
+
+
+
+map은 jQuery 객체의 엘리먼트를 하나씩 순회한다. 이 때 첫번째 인자로 전달된 함수가 호출되는에 첫번째 인자로 엘리먼트의 인덱스, 두번째 인자로 엘리먼트 객체(DOM) 이 전달된다
+
+```javascript
+<ul>
+    <li>html</li>
+    <li>css</li>
+    <li>JavaScript</li>
+</ul>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    var li = $('li');
+    li.map(function(index, elem){
+        console.log(index, elem);
+        $(elem).css('color', 'red');
+    })
+</script>
+```
+
+
+
+### jQuery 객체 API
+
+제어할 대상을 선택한 후에는 대상에 대한 연산을 해야한다. .css와 .attr은 jQuery 객체가 가지고 있는 메소드 중의 하나인데, jQuery는 그 외에도 많은 API를 제공하고 있다. 이에 대한 내용은 jQuery API를 참고하자.
