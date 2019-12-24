@@ -144,3 +144,49 @@ select * from student where department='국문과' AND address='제주';
 - 조회 시 오랜시간을 소모하는 컬럼에 적용
 - 데이터가 긴 경우 인덱스를 사용하지 않는다.
 
+
+
+
+
+## 여러개의 테이블 사용하기
+
+데이터의 규모가 커지면서 하나의 테이블로 정보를 수용하기가 어려워지면 테이블을 분활하고 테이블 간의 관계성을 부여한다.
+
+## JOIN
+
+테이블간의 관계성에 따라서 복수의 테이블을 결합, 하나의 테이블인 것처럼 결과를 출력
+
+## JOIN의 종류
+
+- OUTTER JOIN : 매칭되는 행이 없어도 결과를 가져오고 매칭되는 행이 없는 경우 NULL로 표시한다.
+  LEFT JOIN과 RIGHT JOIN이 있다.
+- INNER JOIN : 조인하는 두개의 테이블 모두에 데이터가 존재하는 행에 대해서만 결과를 가져온다.
+
+## 예제
+
+### LEFT JOIN
+
+가장 많이 사용되는 조인의 형태
+
+```sql
+SELECT s.name, s.location_id, l.name AS address, l.distance  FROM student AS s LEFT JOIN location AS l ON s.location_id = l.id;
+
+```
+
+###  OUTTER JOIN과 INNER JOIN의 차이
+
+Location에서 제주를 삭제 후 OUTTER JOIN(LEFT JOIN)과 INNER JOIN의 차이를 비교
+
+```sql
+DELETE FROM location WHERE name='제주'; 
+ 
+SELECT s.name, s.location_id, l.name AS address, l.distance  FROM student AS s LEFT JOIN location AS l ON s.location_id = l.id; 
+ 
+SELECT s.name, s.location_id, l.name AS address, l.distance  FROM student AS s INNER JOIN location AS l ON s.location_id = l.id;
+```
+
+ 아래 이미지는 JOIN의 종류에 따른 결과를 보여준다.
+
+
+
+![img](SQL 조회.assets/1861.png)
