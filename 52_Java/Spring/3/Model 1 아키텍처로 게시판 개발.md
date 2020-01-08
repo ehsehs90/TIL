@@ -34,11 +34,33 @@
   - HTML 태그를 이용해 로그인 화면 구성
 
   - ```HTML
-    
+    <body>
+    	<center>
+    		<h1>로그인</h1>
+    		<hr>
+    		<form action="login_proc.jsp" method="post">
+    			<table border="1" cellpadding="0" cellspacing="0">
+    				<tr>
+    					<td bgcolor="orange">아이디</td>
+    					<td><input type="text" name="id"></td>
+    				</tr>
+    				<tr>
+    					<td bgcolor="orange">비밀번호</td>
+    					<td><input type="password" name="password"></td>
+    				</tr>
+    				<tr>
+    					<td colspan="2 align="center"><input type="submit" value="로그인">
+    					</td>
+    				</tr>
+    			</table>
+    		</form>
+    	</center>
+    </body>
     ```
 
   - ![image-20200109003715395](Model 1 아키텍처로 게시판 개발.assets/image-20200109003715395.png)
 
-    - 자동으로 설정된 URL 을 보면  프로젝틍 ㅣ름 대신 biz  가 컨텍스트경로로 출력된 걸 확인할 수 있다. 이 컨텍스트 경로를 변경하려면 Server의 환경을 변경해야 한다.
+    - 자동으로 설정된 URL 을 보면  프로젝트 이름 대신 biz  가 컨텍스트경로로 출력된 걸 확인할 수 있다. 이 컨텍스트 경로를 변경하려면 Server환경을 변경해야 한다.
       - [Modules] > [Edit] > path 정보 수정
       - path 속성 값을 프로젝트 이름과 같게 "/BoardWeb" 으로 지정
+
