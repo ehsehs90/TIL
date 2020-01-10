@@ -365,3 +365,7 @@ Controller 인터페이스를 구현한 LoginController 클래스를 만든다
 5. DispatcherServlet은 ViewResolver를 통해 접두사와 접미사가 붙은 JSP파일의 이름과 경로를 리턴받는다
 6. 최종적으로 JSP 를 실행하고 실행결과가 브라우저에 응답된다.
 
+---
+
+### MVC 프레임워크 적용
+
