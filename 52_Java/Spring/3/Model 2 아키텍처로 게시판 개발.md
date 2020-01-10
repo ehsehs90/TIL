@@ -53,7 +53,7 @@
 
 - 로그인 기능을 MVC로 변환하려면  login.jsp 파일의  `<form>` 엘리먼트의 **action 속성값을 "login.do"로 수정**한다.
 
-- login_proc.jsp 파일에 있는 모든 자바 로직을 복하새 DispatherServlet에 추가한다.
+- login_proc.jsp 파일에 있는 모든 자바 로직을 복사해 DispatherServlet에 추가한다.
 
 
 
@@ -121,3 +121,76 @@ MVC 구조로 변경하는데 가장 중요한 기능이 바로 글 목록 검�
 
 ### 글 상세 보기 기능 구현하기
 
+- 기존에 getBoard.jsp 파일로 바로 링크를 걸었다면 이제는 게시글의 상세 정보를 검색할 수 있도록 getBoard.do 로 링크를 수정한다
+
+- getBoard.jsp 파일에 있던 자바코드를 DispatcherServlet 클래스에 "/getBoard.do" 로 옮긴다
+
+- 검색 결과를 getBoard.jsp 파일에 공유하기 위해 세션에 저장하고 getBoard.jsp파일을 리다이렉트한다.
+
+  - ```java
+    // 3. 검색 결과를 세션에 저장하고 상세 화면으로 이동한다
+    	HttpSession session = request.getSession();
+    	session.setAttribute("board", board);
+    	response.sendRedirect("getBoard.jsp");
+    ```
+
+- 세션에 저장된 검색결과를 getBoard.jsp 파일에서 출력한다
+
+  - ```jsp
+    <% 
+    	BoardVO board= (BoardVO) session.getAttribute("board");
+    %>
+    ```
+
+
+
+
+### 글 등록 기능 구현하기
+
+- insertBoard.jsp `<form>` 엘리먼트의 action 속성값을 "insertBoard.do" 로 수정
+
+- insertBoard_proc.jsp 파일의 자바코드를 DispatcherServlet 클래스의 "/insertBoard.do"로 이동
+
+  - 주의할 점 : 등록작업이 성공하면 반드시 "getBoardList.do"를 다시 요청해야 함
+
+    - 작업이 성공한 상태에서 getBoardList.jsp 화면으로 이동하면 등록 전, 세션에 저장된 글 목록을 또 다시 출력함.
+
+    - 따라서 등록,수정,삭제 작업 이후에는 반드시 **"getBoardList.do"를 다시 요청**해 세션에 저장된 **글 목록을 갱신**한다
+
+    - ```java
+      //3. 화면 네비게이션
+      response.sendRedirect("getBoardList.do");
+      ```
+
+
+
+### 글 수정 기능 구현하기
+
+이하 같음
+
+### 글 삭제 기능 구현하기
+
+이하 같음
+
+### 로그아웃 기능 구현하기
+
+- `getBoardList.jsp` , `getBoard.jsp`, `insertBoard.sjp` 에서 "logout_proc.jsp"라는 잉크를 모두 "logout.do" 링크로 수정
+- `logout_proc.jsp` 파일의 자바코드를 DispatcherServlet 클래스에 옮긴다
+
+![image-20200110223710327](Model 2 아키텍처로 게시판 개발.assets/image-20200110223710327.png)
+
+-끝-
+
+
+
+### 정리
+
+- Model 기능의 VO, DAO 클래스는 재사용
+
+- DispatcherServlet 이라는 Controller기능의 서블릿 클래스가 추가
+- 가장 큰 변화 : JSP 의 Controller 기능의 자바로직을 DispatcherServlet 클래스로 이동
+- 즉, **MVC : JSP 에서 Controller 로직에 해당하는 자바코드가 제거**
+  - Controller 로직이란?
+    - 사용자 입력 정보 추출
+    - Model을 이용한 DB연동 처리
+    - 화면 네비게이션에 해당하는 자바 코드
