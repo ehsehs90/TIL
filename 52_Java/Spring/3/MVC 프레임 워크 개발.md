@@ -369,3 +369,209 @@ Controller 인터페이스를 구현한 LoginController 클래스를 만든다
 
 ### MVC 프레임워크 적용
 
+##### (1) 글 목록 검색 구현
+
+- GetBoardListController 클래스 작성
+
+- ```java
+  public class GetBoardListController implements Controller {
+  	@Override
+  	public String handleRequest(HttpServletRequest request, HttpServletResponse response) {
+  		System.out.println("글 목록 검색 처리");		
+  		// 1. 사용자 입력 정보 추출(검색 기능은 나중에 구현)
+  		// 2. DB연동 처리
+  		BoardVO vo = new BoardVO();
+  		BoardDAO boardDAO = new BoardDAO();
+  		List<BoardVO> boardList = boardDAO.getBoardList(vo);
+  		// 3. 검색 결과를 세션에 저장하고 목록 화면으로 이동한다.
+  		HttpSession session = request.getSession();
+  		session.setAttribute("boardList", boardList);
+  		return "getBoardList";
+      }
+  }
+  ```
+  - DispatcherServlet 소스를 복사해 구현했으므로 기본 소스는 같다.
+  - 마지막에 글 목록을 출력할 JSP 이름을 확장자 없이 리턴하는데 이는 ViewResolver를 이용하여 View 이름을 완성하기 떄문에 생략한 것이다.
+  - 마지막으로 **GetBoardListController객체를 HandlerMapping에 등록**한다
+
+- ```java
+  public HandlerMapping() {
+  		mappings= new HashMap<String, Controller>();		
+  		mappings.put("/getBoardList.do", new GetBoardListController());
+  	}
+  ```
+
+
+
+##### (2) 글 상세 보기 구현
+
+> - Controller 인터페이스를 구현한 GetBoardController 클래스를 작성한다. 
+> -  DispatcherServlet에서 글 상세조회 소스를 복사해 handleRequest( ) 메소드를 구현한다.
+
+- ```java
+  public class GetBoardController implements Controller {
+  	@Override
+  	public String handleRequest(HttpServletRequest request, HttpServletResponse response) {
+  		System.out.println("글 상세 조회 처리");		
+  		// 1. 검색할 게시글 번호 추출
+  		String seq = request.getParameter("seq");	
+  		// 2. DB연동 처리
+  		BoardVO vo = new BoardVO();
+  		vo.setSeq(Integer.parseInt(seq));		
+  		BoardDAO boardDAO = new BoardDAO();
+  		BoardVO board = boardDAO.getBoard(vo);
+  		// 3. 검색 결과를 세션에 저장하고 상세 화면으로 이동한다
+  		HttpSession session = request.getSession();
+  		session.setAttribute("board", board);
+  		return "getBoard";
+  	}
+  }
+  ```
+
+  - 글 상세화면으로 이동할 때 역시 ViewResolver를 이용하기 때문에 확장자 '.jsp' 를 생략한다
+  - GetBoardController 객체도 HandlerMapping 클래스에 등록한다
+
+##### (3) 글 등록 구현
+
+> DispatcherServlet에서 글 등록 관련 소스를 복사해 InsertBoardController 클래스를 작성한다
+
+- InsertBoardController.java
+
+  ```java
+  public class InsertBoardController implements Controller {
+  	@Override
+  	public String handleRequest(HttpServletRequest request, HttpServletResponse response) {
+  		System.out.println("글 등록 처리");		
+  		//1. 사용자 입력 정보 추출
+  		//request.setCharacterEncoding("UTF-8");
+  		String title = request.getParameter("title");
+  		String writer =	request.getParameter("writer");
+  		String content = request.getParameter("content");		
+  		//2. DB연동 처리		
+  		BoardVO vo = new BoardVO();
+  		vo.setTitle(title);
+  		vo.setWriter(writer);
+  		vo.setContent(content);		
+  		BoardDAO boardDAO = new BoardDAO();
+  		boardDAO.insertBoard(vo);		
+  		//3. 화면 네비게이션
+  		return "getBoardList.do";
+  	}
+  }
+  ```
+
+  - handleRequest() 메소드가 글 등록작업을 처리한 후에 getBoardList.do 문자열을 리턴하는 부부분이 중요하다
+    - 글 등록에 성공하면 등록된 글이 포함된 글 목록을 다시 검색해야 한다.
+    - 따라서 **getBoardList.do 문자열을 리턴하여 리다이렉트 처리**한다
+
+##### (4) 글 수정 구현
+
+> DispatcherServlet 에서 글 수정 관련 소스를 복사해 UpdateBoardController 클래스 작성
+
+- ```java
+  public class UpdateBoardController implements Controller{
+  	@Override
+  	public String handleRequest(HttpServletRequest request, HttpServletResponse response) {
+  		System.out.println("글 수정 처리");
+  		//1. 사용자 입력 정보 추출
+  		//request.setCharacterEncoding("UTF-8");
+  		String title = request.getParameter("title");
+  		String content = request.getParameter("content");
+  		String seq = request.getParameter("seq");		
+  		//2. DB연동 처리
+  		BoardVO vo = new BoardVO();
+  		vo.setTitle(title);
+  		vo.setContent(content);
+  		vo.setSeq(Integer.parseInt(seq));		
+  		BoardDAO boardDAO = new BoardDAO();
+  		boardDAO.updateBoard(vo);			
+  		//3. 화면 네비게이션
+  		return "getBoardList.do";
+  	}
+  }
+  ```
+
+  - UpdateBoardController 역시 글 수정 성공 후에 글 목록을 다시 검색하여 목록화면을 갱신해야 하므로 getBoardList.do 를 리턴한다
+  - 작성된 UpdateBoardController 객체를 HandlerMapping에 등록한다
+
+##### (5) 글 삭제 구현
+
+> DispatcherServlet 에서 글 삭제 관련 소스를 복사해 DeleteBoardController 클래스 작성
+
+- DeleteBoardController
+
+- ```java
+  public class DeleteBoardController implements Controller{
+  	@Override
+  	public String handleRequest(HttpServletRequest request, HttpServletResponse response) {
+  		System.out.println("글 삭제 처리");		
+  		//1. 사용자 입력정보 추출
+  		String seq= request.getParameter("seq");
+  		//2. DB연동
+  		BoardVO vo = new BoardVO();
+  		vo.setSeq(Integer.parseInt(seq));		
+  		BoardDAO boardDAO = new BoardDAO();
+  		boardDAO.deleteBoard(vo);		
+  		//3. 화면 네비게이션
+  		return "getBoardList.do";	
+  	}
+  }
+  ```
+
+  - 작성된 DeleteBoardController 객체를 HandlerMapping에 등록한다
+
+##### (6) 로그아웃 구현
+
+- LogoutController
+
+- ```java
+  public class LogoutController implements Controller {
+  	@Override
+  	public String handleRequest(HttpServletRequest request, HttpServletResponse response) {
+  		System.out.println("로그아웃 처리");
+  		
+  		// 1. 브라우저와 연결된 세션 객체를 강제 종료한다.
+  		HttpSession session = request.getSession();
+  		session.invalidate();
+  		// 2. 세션 종료 후, 메인 화면으로 이동한다.
+  		return "login";
+  	}
+  }
+  ```
+
+  - 작성된 LogoutController 객체를 HandlerMapping 에 등록한다
+
+
+
+### [정리]
+
+- Controller 를 이렇게 복잡하게 구현하는 이유는 뭘까?
+  - Controller 에서 가장 중요한 DispatcherServlet 클래스는 유지보수 과정에서 기존의 기능을 수정하거나 새로운 기능을 추가하더라도 절대 수정되지 않는다.
+  - 기능 추가나 수정에 대해 DispatherServlet 을 수정하지 않도록 해야 프레임워크에서 DispatherServlet을 제공할 수 있는 것이다.
+
+
+
+### EL/JSTL 이용한 JSP 화면 처리
+
+#### EL 과 JSTL
+
+##### EL
+
+- EL 은 JSP 2.0 에서 새로 추가된 스크립트언어
+
+  - 기존의 표현식을 대체하는 표현 약어
+
+    - session 에 저장되어 있는 사용자 이름을 JSP화면에 출력할 떄
+
+    - ```jsp
+      <!-- 예전 -->
+      <%= session.getAttribute("userName") %>
+      <!-- EL사용 -->
+    ${username}
+      ```
+  
+
+##### JSTL
+
+- JSTL(JSP Standard Tag Library) 란, JSP로 프로그램을 개발하다보면 Scriptlet 에서 if, for, switch 등의 자바 코드를 사용해야 할 때가 있는데, JSTL 은 JSP 에서 사용해야하는 자바코드를 태그 형태로 사용할 수 있도록 지원한다.
+
